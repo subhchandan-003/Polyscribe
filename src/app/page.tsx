@@ -104,18 +104,20 @@ export default function Home() {
         setSoapNote(note);
         setAppState("done");
 
-        // Auto-save session
+        // Auto-save session, scoped to the logged-in doctor
         const duration = recordingStartRef.current
           ? Math.round((Date.now() - recordingStartRef.current) / 1000)
           : undefined;
-        saveSession({
-          specialty,
-          inputLanguages: langConfig.inputLanguages,
-          outputLanguage: langConfig.outputLanguage,
-          transcript: rawTranscript,
-          soapNote: note,
-          duration,
-        });
+        if (user) {
+          saveSession(user.id, {
+            specialty,
+            inputLanguages: langConfig.inputLanguages,
+            outputLanguage: langConfig.outputLanguage,
+            transcript: rawTranscript,
+            soapNote: note,
+            duration,
+          });
+        }
         setSaved(true);
       } catch (err) {
         let msg = "Something went wrong";
@@ -128,7 +130,7 @@ export default function Home() {
         setAppState("error");
       }
     },
-    [langConfig, specialty]
+    [langConfig, specialty, user]
   );
 
   const handleRecordingStart = useCallback(() => {

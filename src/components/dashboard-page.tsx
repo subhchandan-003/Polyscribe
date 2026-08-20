@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { getSessions } from "@/lib/sessions";
+import { useAuth } from "@/lib/auth-context";
 import { SPECIALTIES } from "@/lib/specialty-prompts";
 import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
 import { Card } from "@/components/ui/card";
@@ -56,8 +57,8 @@ const LANG_NAMES: Record<string, string> = {
   sa: "Sanskrit",
 };
 
-function computeStats(): Stats {
-  const sessions = getSessions();
+function computeStats(userId: string): Stats {
+  const sessions = getSessions(userId);
   const now = Date.now();
   const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
 
@@ -89,7 +90,8 @@ function computeStats(): Stats {
 }
 
 export function DashboardPage({ onBack }: DashboardPageProps) {
-  const [stats] = useState<Stats>(computeStats);
+  const { user } = useAuth();
+  const [stats] = useState<Stats>(() => computeStats(user?.id ?? ""));
 
   const statCards = [
     {

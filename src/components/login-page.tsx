@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "@/lib/auth-context";
+import { SPECIALTIES, type Specialty } from "@/lib/specialty-prompts";
+import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
 import {
   Stethoscope,
   Heart,
@@ -12,9 +14,29 @@ import {
   Lock,
   Sparkles,
   Activity,
+  Zap,
 } from "lucide-react";
 
 type Tab = "doctor" | "patient";
+
+interface QuickLoginDoctor {
+  name: string;
+  email: string;
+  password: string;
+  specialty: Specialty;
+  language: string;
+}
+
+/* Five doctors, five specialties, five consulting languages, one tap
+ * each to sign in. Their histories and stats are pre-seeded and kept
+ * fully separate per doctor (see seed-sessions.ts). */
+const QUICK_LOGIN_DOCTORS: QuickLoginDoctor[] = [
+  { name: "Dr. Priya Sharma", email: "doctor@polyscribe.io", password: "doctor123", specialty: "general", language: "Hindi" },
+  { name: "Dr. Kavita Iyer", email: "kavita.iyer@polyscribe.io", password: "doctor123", specialty: "cardiology", language: "Tamil" },
+  { name: "Dr. Rohan Verma", email: "rohan.verma@polyscribe.io", password: "doctor123", specialty: "pediatrics", language: "Marathi" },
+  { name: "Dr. Ananya Reddy", email: "ananya.reddy@polyscribe.io", password: "doctor123", specialty: "ent", language: "Telugu" },
+  { name: "Dr. Vikram Nair", email: "vikram.nair@polyscribe.io", password: "doctor123", specialty: "dermatology", language: "Malayalam" },
+];
 
 /* Heartbeat trace, shared decorative motif */
 function TraceLine() {
@@ -62,6 +84,14 @@ export function LoginPage() {
     setEmail(isDoctor ? "doctor@polyscribe.io" : "patient@polyscribe.io");
     setPassword(isDoctor ? "doctor123" : "patient123");
     setError(null);
+  };
+
+  const handleQuickLogin = (doctor: QuickLoginDoctor) => {
+    setError(null);
+    setIsSubmitting(true);
+    const result = login(doctor.email, doctor.password);
+    if (!result.success) setError(result.error ?? "Login failed");
+    setIsSubmitting(false);
   };
 
   const handleTabSwitch = (newTab: Tab) => {
@@ -123,12 +153,12 @@ export function LoginPage() {
       </motion.div>
 
       {/* ── Login panel ── */}
-      <div className="flex-1 flex items-start justify-center px-6 pt-2 pb-16 relative">
+      <div className="flex-1 flex flex-col lg:flex-row items-start justify-center gap-6 px-6 pt-2 pb-16 relative max-w-4xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, y: 24, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-          className="w-full max-w-md rounded-3xl glass-strong overflow-hidden"
+          className="w-full max-w-md rounded-3xl glass-strong overflow-hidden mx-auto lg:mx-0"
         >
           {/* ── Tabs ── */}
           <div className="flex gap-1.5 p-2">
@@ -267,6 +297,57 @@ export function LoginPage() {
             </motion.form>
           </AnimatePresence>
         </motion.div>
+
+        {/* ── Quick login: five doctors, five specialties, five languages ── */}
+        <AnimatePresence>
+          {isDoctor && (
+            <motion.div
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+              className="w-full max-w-md rounded-3xl glass-strong overflow-hidden p-6"
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <Zap className="h-4 w-4 text-primary" />
+                <h3 className="font-heading text-base font-bold text-foreground">Quick Login</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">
+                Jump straight in as one of five demo doctors, each with their own
+                specialty, language, and consultation history.
+              </p>
+
+              <div className="space-y-2">
+                {QUICK_LOGIN_DOCTORS.map((doctor) => {
+                  const Icon = SPECIALTY_ICONS[doctor.specialty];
+                  const colors = SPECIALTY_COLORS[doctor.specialty];
+                  const specialtyLabel =
+                    SPECIALTIES.find((s) => s.id === doctor.specialty)?.label ?? doctor.specialty;
+                  return (
+                    <button
+                      key={doctor.email}
+                      type="button"
+                      onClick={() => handleQuickLogin(doctor)}
+                      disabled={isSubmitting}
+                      className="w-full flex items-center gap-3 rounded-2xl p-3 text-left hover:bg-muted/60 transition-colors duration-300 cursor-pointer disabled:opacity-60"
+                    >
+                      <div className={`h-10 w-10 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center shrink-0`}>
+                        <Icon className="h-4.5 w-4.5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-foreground truncate">{doctor.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{specialtyLabel}</p>
+                      </div>
+                      <span className="text-xs font-medium text-primary rounded-full bg-accent px-2.5 py-1 shrink-0">
+                        {doctor.language}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* ── Footer ── */}

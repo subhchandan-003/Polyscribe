@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { getSessions } from "@/lib/sessions";
+import { useAuth } from "@/lib/auth-context";
 import { FileText, Clock, CalendarCheck } from "lucide-react";
 
-function computeStats(): Stats {
-  const sessions = getSessions();
+function computeStats(userId: string): Stats {
+  const sessions = getSessions(userId);
   const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   return {
     notes: sessions.length,
@@ -31,7 +32,8 @@ const ITEMS = [
  * actual saved sessions. Hidden until there's at least one real session,
  * so a fresh account never shows a misleading row of zeros. */
 export function ImpactStats() {
-  const [stats] = useState<Stats>(computeStats);
+  const { user } = useAuth();
+  const [stats] = useState<Stats>(() => computeStats(user?.id ?? ""));
 
   if (stats.notes === 0) return null;
 

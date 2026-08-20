@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { getSessions, deleteSession, type Session } from "@/lib/sessions";
+import { useAuth } from "@/lib/auth-context";
 import { SPECIALTIES } from "@/lib/specialty-prompts";
 import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
 import { Card } from "@/components/ui/card";
@@ -24,15 +25,15 @@ interface SessionHistoryProps {
 }
 
 export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
-  const [sessions, setSessions] = useState<Session[]>([]);
-
-  useEffect(() => {
-    setSessions(getSessions());
-  }, []);
+  const { user } = useAuth();
+  const [sessions, setSessions] = useState<Session[]>(() =>
+    user ? getSessions(user.id) : []
+  );
 
   const handleDelete = (id: string) => {
-    deleteSession(id);
-    setSessions(getSessions());
+    if (!user) return;
+    deleteSession(user.id, id);
+    setSessions(getSessions(user.id));
   };
 
   const formatDate = (ts: number) => {
