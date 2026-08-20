@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Header } from "@/components/header";
 import { Card } from "@/components/ui/card";
-import { FileText, Clock, Globe, Shield, Heart, Sparkles } from "lucide-react";
+import { FileText, Clock, Globe, Shield, Heart, Sparkles, Mic, Languages } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 /* ── Decorative floating blob — pure CSS, no images ── */
@@ -110,7 +110,7 @@ export function PatientDashboard() {
             </span>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-medium bg-white/15 text-white/90 rounded-full px-3 py-1 backdrop-blur-sm">
               <Sparkles className="h-3 w-3" />
-              DPDP Act &amp; PDPA compliant
+              DPDP Act 2023 compliant
             </span>
           </div>
         </div>
@@ -144,6 +144,32 @@ export function PatientDashboard() {
             delay="0.19s"
           />
         </div>
+
+        {/* ─────────────────────────────────────────────
+            HOW IT WORKS — real journey, colorful step badges
+        ───────────────────────────────────────────── */}
+        <Card className="rounded-2xl p-6 mb-6 animate-fade-scale-in" style={{ animationDelay: "0.18s" }}>
+          <h3 className="text-sm font-semibold text-foreground tracking-tight mb-5">
+            How your notes reach you
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {[
+              { icon: Mic, bg: "bg-sky-100", text: "text-sky-600", title: "Consultation recorded", desc: "Your doctor records the visit with your consent" },
+              { icon: Languages, bg: "bg-violet-100", text: "text-violet-600", title: "AI structures the note", desc: "Transcribed and organized into a clinical SOAP note" },
+              { icon: Heart, bg: "bg-emerald-100", text: "text-emerald-600", title: "Shared with you", desc: "The finished note appears here, private to you" },
+            ].map((step) => (
+              <div key={step.title} className="flex flex-col items-center text-center gap-2.5">
+                <div className={`h-12 w-12 rounded-full flex items-center justify-center ${step.bg} ${step.text}`}>
+                  <step.icon className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-foreground">{step.title}</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
 
         {/* ─────────────────────────────────────────────
             RECORDS LIST
@@ -198,7 +224,7 @@ export function PatientDashboard() {
       <footer className="border-t border-emerald-100/50 py-4 mt-4">
         <div className="max-w-4xl mx-auto px-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
           <Shield className="h-3.5 w-3.5 text-emerald-500" />
-          PolyScribe protects your health data under DPDP Act 2023 and Singapore PDPA
+          PolyScribe protects your health data under India&apos;s DPDP Act 2023
         </div>
       </footer>
     </div>

@@ -136,8 +136,8 @@ function SidebarBody({
 
         {user && (
           <div className="flex items-center gap-2 px-1">
-            <div className="h-8 w-8 rounded-full bg-teal-50 border border-teal-200/60 flex items-center justify-center shrink-0">
-              <Stethoscope className="h-4 w-4 text-teal-700" />
+            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center shrink-0 shadow-sm shadow-teal-200/60">
+              <Stethoscope className="h-4 w-4 text-white" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs font-medium truncate leading-none">{user.name}</p>
@@ -161,6 +161,13 @@ function SidebarBody({
     </div>
   );
 }
+
+const BOTTOM_NAV_ITEMS: { key: NavKey; label: string; icon: typeof Stethoscope }[] = [
+  { key: "console", label: "Console", icon: Stethoscope },
+  { key: "history", label: "History", icon: History },
+  { key: "demo", label: "Demo", icon: Sparkles },
+  { key: "dashboard", label: "Stats", icon: BarChart3 },
+];
 
 export function Sidebar(props: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -188,6 +195,34 @@ export function Sidebar(props: SidebarProps) {
         >
           <Menu className="h-4.5 w-4.5" />
         </Button>
+      </div>
+
+      {/* Mobile floating bottom nav — icon-only for guaranteed fit on narrow screens */}
+      <div className="lg:hidden fixed bottom-4 left-4 right-4 z-40 flex justify-center">
+        <div className="flex items-center gap-1 bg-card/95 backdrop-blur-md border border-border/60 rounded-full shadow-lg shadow-black/10 px-1.5 py-1.5">
+          {BOTTOM_NAV_ITEMS.map((item) => {
+            const isActive = props.active === item.key;
+            return (
+              <button
+                key={item.key}
+                onClick={() => props.onNavigate(item.key)}
+                aria-label={item.label}
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors cursor-pointer ${
+                  isActive ? "bg-teal-600 text-white" : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                <item.icon className="h-4.5 w-4.5" />
+              </button>
+            );
+          })}
+          <button
+            onClick={props.onNewConsultation}
+            aria-label="New Consultation"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-600 text-white shadow-sm shadow-teal-300/50 cursor-pointer"
+          >
+            <Plus className="h-4.5 w-4.5" />
+          </button>
+        </div>
       </div>
 
       {/* Mobile drawer */}

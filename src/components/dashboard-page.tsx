@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getSessions } from "@/lib/sessions";
 import { SPECIALTIES } from "@/lib/specialty-prompts";
-import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
+import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -189,11 +189,14 @@ export function DashboardPage({ onBack }: DashboardPageProps) {
                     ? Math.round((count / stats.totalNotes) * 100)
                     : 0;
                 const Icon = SPECIALTY_ICONS[spec.id];
+                const colors = SPECIALTY_COLORS[spec.id];
                 return (
                   <div key={spec.id}>
                     <div className="flex items-center justify-between text-sm mb-1">
                       <span className="flex items-center gap-2">
-                        <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className={`h-6 w-6 rounded-full flex items-center justify-center ${colors.bg} ${colors.text}`}>
+                          <Icon className="h-3 w-3" />
+                        </span>
                         {spec.label}
                       </span>
                       <span className="text-muted-foreground">

@@ -12,6 +12,7 @@ import { ProcessingOverlay } from "@/components/processing-overlay";
 import { SessionHistory } from "@/components/session-history";
 import { SpecialtySelector } from "@/components/specialty-selector";
 import { ConsentGate } from "@/components/consent-gate";
+import { ImpactStats } from "@/components/impact-stats";
 import { PricingPage } from "@/components/pricing-page";
 import { DashboardPage } from "@/components/dashboard-page";
 import { PitchPage } from "@/components/pitch-page";
@@ -239,7 +240,7 @@ export default function Home() {
         onNewConsultation={handleNewSession}
       />
 
-      <div className="flex-1 flex flex-col overflow-y-auto">
+      <div className="flex-1 flex flex-col overflow-y-auto pb-24 lg:pb-0">
         {/* Business layer pages */}
         {page === "pricing" && (
           <div className="max-w-6xl mx-auto w-full px-6 lg:px-10 py-8">
@@ -287,8 +288,8 @@ export default function Home() {
                 {/* Main column */}
                 <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-7 lg:pt-6">
                   <div>
-                    <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-teal-600/70 bg-teal-50 border border-teal-100 rounded-full px-3 py-1 mb-3">
-                      <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
+                    <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-teal-600/70 bg-teal-50 border border-teal-100 rounded-full px-3 py-1 mb-3 whitespace-nowrap">
+                      <span className="h-1.5 w-1.5 rounded-full bg-teal-500 shrink-0" />
                       New Consultation
                     </div>
                     <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground mb-2">
@@ -299,6 +300,8 @@ export default function Home() {
                       diarization, and SOAP structuring automatically.
                     </p>
                   </div>
+
+                  <ImpactStats />
 
                   <div className="w-full flex justify-center lg:justify-start">
                     {!consented ? (

@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DEMO_CASES, type DemoCase } from "@/lib/demo-transcripts";
-import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
+import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
 
 interface DemoModeProps {
   onRunDemo: (demoCase: DemoCase) => void;
@@ -52,10 +52,11 @@ export function DemoMode({ onRunDemo, onBack, isProcessing }: DemoModeProps) {
       <div className="grid gap-4">
         {DEMO_CASES.map((demo) => {
           const SpecIcon = SPECIALTY_ICONS[demo.specialty];
+          const colors = SPECIALTY_COLORS[demo.specialty];
           return (
           <Card
             key={demo.id}
-            className={`p-5 cursor-pointer transition-all hover:shadow-md hover:border-primary/30 ${
+            className={`p-5 cursor-pointer card-hover-lift ${
               selected === demo.id
                 ? "ring-2 ring-primary border-primary/50 shadow-md"
                 : ""
@@ -64,9 +65,9 @@ export function DemoMode({ onRunDemo, onBack, isProcessing }: DemoModeProps) {
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <SpecIcon className="h-4 w-4 text-primary" />
+                <div className="flex items-center gap-2.5 mb-1.5">
+                  <div className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${colors.bg} ${colors.text}`}>
+                    <SpecIcon className="h-5 w-5" />
                   </div>
                   <h3 className="font-heading font-semibold text-foreground truncate">
                     {demo.title}

@@ -1,7 +1,7 @@
 "use client";
 
 import { SPECIALTIES, type Specialty } from "@/lib/specialty-prompts";
-import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
+import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
 
 interface SpecialtySelectorProps {
   value: Specialty;
@@ -11,29 +11,36 @@ interface SpecialtySelectorProps {
 export function SpecialtySelector({ value, onChange }: SpecialtySelectorProps) {
   return (
     <div className="w-full">
-      <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-2 block">
+      <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-3 block">
         Specialty Template
       </label>
-      <div className="grid grid-cols-2 gap-1.5">
+      <div className="grid grid-cols-3 gap-x-1 gap-y-3">
         {SPECIALTIES.map((spec) => {
           const isSelected = value === spec.id;
           const Icon = SPECIALTY_ICONS[spec.id];
+          const colors = SPECIALTY_COLORS[spec.id];
           return (
             <button
               key={spec.id}
               onClick={() => onChange(spec.id)}
-              className={`flex items-center gap-2 px-2.5 py-2 rounded-lg text-left transition-all cursor-pointer ${
-                isSelected
-                  ? "bg-primary/10 ring-1 ring-primary/30 text-foreground"
-                  : "bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
+              className="flex flex-col items-center gap-1.5 cursor-pointer group"
             >
-              <Icon className={`h-4 w-4 shrink-0 ${isSelected ? "text-primary" : ""}`} />
-              <div className="min-w-0">
-                <p className={`text-xs font-medium truncate ${isSelected ? "text-primary" : ""}`}>
-                  {spec.label}
-                </p>
-              </div>
+              <span
+                className={`flex h-12 w-12 items-center justify-center rounded-full transition-all ${colors.bg} ${colors.text} ${
+                  isSelected
+                    ? `ring-2 ring-offset-2 ring-offset-card ${colors.ring} scale-105`
+                    : "opacity-70 group-hover:opacity-100 group-hover:scale-105"
+                }`}
+              >
+                <Icon className="h-5 w-5" />
+              </span>
+              <span
+                className={`text-[10.5px] font-medium leading-tight text-center ${
+                  isSelected ? "text-foreground" : "text-muted-foreground"
+                }`}
+              >
+                {spec.label === "General Practice" ? "General" : spec.label}
+              </span>
             </button>
           );
         })}

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { getSessions, deleteSession, type Session } from "@/lib/sessions";
 import { SPECIALTIES } from "@/lib/specialty-prompts";
-import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
+import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -133,24 +133,23 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
                   {dateSessions.map((session) => {
                     const spec = getSpecialtyInfo(session.specialty);
                     const SpecIcon = spec ? SPECIALTY_ICONS[spec.id] : Stethoscope;
+                    const colors = spec ? SPECIALTY_COLORS[spec.id] : SPECIALTY_COLORS.general;
                     const preview = session.soapNote.assessment.slice(0, 120);
                     return (
                       <Card
                         key={session.id}
-                        className="p-4 hover:bg-muted/30 transition-colors group cursor-pointer"
+                        className="p-4 card-hover-lift cursor-pointer"
                         onClick={() => onLoadSession(session)}
                       >
                         <div className="flex items-start gap-3">
-                          {/* Timeline dot */}
-                          <div className="flex flex-col items-center pt-1">
-                            <div className="h-2.5 w-2.5 rounded-full bg-primary/60" />
-                            <div className="w-px h-full bg-border/50 mt-1" />
+                          {/* Specialty avatar badge */}
+                          <div className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${colors.bg} ${colors.text}`}>
+                            <SpecIcon className="h-4 w-4" />
                           </div>
 
                           {/* Content */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <SpecIcon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                               <span className="text-sm font-medium">
                                 {spec?.label ?? "General"}
                               </span>
