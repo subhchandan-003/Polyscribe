@@ -26,7 +26,7 @@ const ITEMS = [
   { key: "thisWeek" as const, icon: CalendarCheck, label: "This Week", format: (s: Stats) => `${s.thisWeek}` },
 ];
 
-/** Compact real-data stat strip — mirrors the "10y+ / 30k+ / 4.9" pattern
+/** Compact real-data stat strip. Mirrors the "10y+ / 30k+ / 4.9" pattern
  * seen on doctor-profile reference designs, but grounded in this doctor's
  * actual saved sessions. Hidden until there's at least one real session,
  * so a fresh account never shows a misleading row of zeros. */

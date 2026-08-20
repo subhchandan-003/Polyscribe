@@ -44,7 +44,7 @@ export function DemoMode({ onRunDemo, onBack, isProcessing }: DemoModeProps) {
         </h2>
         <p className="text-muted-foreground text-sm max-w-md mx-auto">
           Select a sample consultation below. PolyScribe will process the
-          pre-recorded transcript through the full pipeline — cleanup, diarization,
+          pre-recorded transcript through the full pipeline: cleanup, diarization,
           and SOAP note generation.
         </p>
       </div>

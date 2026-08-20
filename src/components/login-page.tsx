@@ -16,7 +16,7 @@ import {
 
 type Tab = "doctor" | "patient";
 
-/* ── Heartbeat trace — shared decorative motif ── */
+/* Heartbeat trace, shared decorative motif */
 function TraceLine() {
   return (
     <svg
@@ -78,7 +78,7 @@ export function LoginPage() {
         emailLabel: "Work Email",
         emailPlaceholder: "doctor@polyscribe.io",
         btnText: "Access Clinical Portal",
-        securityNote: "DPDP Act 2023 compliant — no raw audio stored",
+        securityNote: "DPDP Act 2023 compliant, no raw audio stored",
       }
     : {
         heading: "Welcome back",
@@ -272,7 +272,7 @@ export function LoginPage() {
       {/* ── Footer ── */}
       <footer className="py-5 relative">
         <p className="text-center text-xs text-muted-foreground/70">
-          PolyScribe — Built for India&apos;s DPDP Act 2023 compliance
+          PolyScribe is built for India&apos;s DPDP Act 2023 compliance
         </p>
       </footer>
     </div>

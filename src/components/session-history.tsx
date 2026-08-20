@@ -154,7 +154,7 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
                               </span>
                               {session.patientName && (
                                 <span className="text-xs text-muted-foreground">
-                                  — {session.patientName}
+                                  · {session.patientName}
                                 </span>
                               )}
                               <Badge

@@ -401,7 +401,7 @@ function TrialModal({
                 ) : (
                   <>
                     <Check className="h-4 w-4" />
-                    Start Free Trial — {planName}
+                    Start Free Trial for {planName}
                   </>
                 )}
               </button>
@@ -632,7 +632,7 @@ export function PricingPage({ onBack }: PricingPageProps) {
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto text-sm leading-relaxed">
             Every AI scribe charges $100–250/month for US doctors. PolyScribe
-            starts at ₹1,500 — because the other 5.5 billion people deserve
+            starts at ₹1,500 because the other 5.5 billion people deserve
             AI-powered clinical documentation too.
           </p>
         </div>
@@ -707,7 +707,7 @@ export function PricingPage({ onBack }: PricingPageProps) {
                   tier.highlight ? "card-featured" : ""
                 }`}
               >
-                {/* Badge slot — in-flow, fixes overlap */}
+                {/* Badge slot, in-flow, fixes overlap */}
                 <div className="h-6 flex items-center justify-center mb-3">
                   {tier.badge && (
                     <span className="inline-flex items-center text-[10px] font-semibold rounded-full bg-gradient-brand text-primary-foreground px-3 py-1 tracking-wide shadow-sm shadow-teal-500/25">
@@ -761,7 +761,7 @@ export function PricingPage({ onBack }: PricingPageProps) {
                   ))}
                 </ul>
 
-                {/* CTA button — wired up */}
+                {/* CTA button, wired up */}
                 <button
                   onClick={() => setActiveModal({ kind: tier.cta, tier })}
                   className={`w-full h-11 rounded-xl text-sm font-semibold transition-all duration-300 cursor-pointer ${
@@ -792,8 +792,8 @@ export function PricingPage({ onBack }: PricingPageProps) {
                 the same foundation models (Claude, Gemini) but optimizes for
                 emerging market economics: lean architecture, no on-premise
                 overhead, and aggressive prompt efficiency. A doctor in Pune
-                seeing 50 patients/day at ₹3,500/month saves 2.5+ hours daily
-                — that&apos;s ₹70 per consultation, less than the cost of a chai.
+                seeing 50 patients/day at ₹3,500/month saves 2.5+ hours daily.
+                That&apos;s ₹70 per consultation, less than the cost of a chai.
               </p>
             </div>
           </div>

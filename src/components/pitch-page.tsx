@@ -28,7 +28,7 @@ export function PitchPage({ onBack }: PitchPageProps) {
         {/* Hero */}
         <div className="text-center mb-14">
           <Badge variant="secondary" className="mb-4 text-xs">
-            EthAum Venture Partners Hackathon — June 2026
+            EthAum Venture Partners Hackathon, June 2026
           </Badge>
           <h1 className="font-heading text-4xl font-bold tracking-tight mb-4 leading-tight">
             Every AI scribe is built for<br />
@@ -51,8 +51,8 @@ export function PitchPage({ onBack }: PitchPageProps) {
               Doctors in India, Southeast Asia, and the Middle East spend{" "}
               <span className="font-semibold">30–50% of their consultation
               time</span> on clinical documentation. Every well-funded AI scribe
-              in the world — Abridge ($5.3B), Nuance DAX ($19.7B), Ambience,
-              Freed, Nabla — is <span className="font-semibold">English-first
+              in the world, including Abridge ($5.3B), Nuance DAX ($19.7B), Ambience,
+              Freed, and Nabla, is <span className="font-semibold">English-first
               and US-focused</span>.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
@@ -82,7 +82,7 @@ export function PitchPage({ onBack }: PitchPageProps) {
             <p className="text-lg font-semibold text-foreground mb-4 leading-snug">
               PolyScribe listens to doctor-patient conversations in{" "}
               <span className="text-primary">Hindi, Tamil, Mandarin, Malay,
-              Arabic — or any mix of them</span> — and produces clean,
+              Arabic, or any mix of them</span>, and produces clean,
               structured SOAP notes in seconds.
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -119,7 +119,7 @@ export function PitchPage({ onBack }: PitchPageProps) {
             <blockquote className="border-l-2 border-primary pl-4 text-sm text-foreground/80 italic">
               SingHealth&apos;s Note Buddy has generated over 67,000 medical and
               administrative notes across SingHealth institutions, supporting
-              5,000+ healthcare staff — validating demand decisively. But Note
+              5,000+ healthcare staff, which validates demand decisively. But Note
               Buddy is an internal tool. It cannot be bought or deployed by any
               hospital in India, Indonesia, or the Middle East.
             </blockquote>
@@ -178,14 +178,14 @@ export function PitchPage({ onBack }: PitchPageProps) {
               <MapPin className="h-5 w-5 mx-auto mb-1.5 text-primary" />
               <p className="text-xs font-semibold mb-0.5">India Second</p>
               <p className="text-[10px] text-muted-foreground">
-                Tier-1 private clinics — Bangalore, Pune, Mumbai GP networks
+                Tier-1 private clinics in Bangalore, Pune, and Mumbai GP networks
               </p>
             </Card>
             <Card className="p-4 text-center border-border">
               <Globe className="h-5 w-5 mx-auto mb-1.5 text-primary" />
               <p className="text-xs font-semibold mb-0.5">ASEAN & Gulf</p>
               <p className="text-[10px] text-muted-foreground">
-                Malaysia, UAE, Saudi — Arabic & Malay code-switching markets
+                Malaysia, UAE, and Saudi, where Arabic and Malay code-switching are common
               </p>
             </Card>
           </div>

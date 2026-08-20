@@ -50,7 +50,7 @@ Doctor: Good that you quit. Let me examine you now. Your blood pressure is 148 o
 
 Patient: Is it serious Doctor?
 
-Doctor: We need to run some tests. I'm going to order an ECG, troponin levels, a lipid panel, and we should get a stress test done this week. Based on your symptoms and risk factors — the chest pain pattern, family history, smoking history, and hypertension — I'm concerned about stable angina, possibly coronary artery disease.
+Doctor: We need to run some tests. I'm going to order an ECG, troponin levels, a lipid panel, and we should get a stress test done this week. Based on your symptoms and risk factors, including the chest pain pattern, family history, smoking history, and hypertension, I'm concerned about stable angina, possibly coronary artery disease.
 
 Patient: What should I do in the meantime?
 
@@ -62,7 +62,7 @@ Doctor: Take care Mr. Sharma. My assistant will help you schedule everything.`,
   },
   {
     id: "hi-general",
-    title: "बुखार और खांसी — Fever & Cough",
+    title: "बुखार और खांसी (Fever & Cough)",
     language: "Hindi",
     languageCode: "hi",
     specialty: "general",
@@ -95,7 +95,7 @@ Patient: Mere bache ko bhi thoda sardi ho rahi hai. Main ek school mein teacher 
 
 Doctor: Theek hai, main aapko check karti hoon. Temperature abhi 101.2 hai. Throat congested hai. Chest mein right side mein thode crackles hain. Baaki normal hai.
 
-Doctor: Dekhiye, aapko upper respiratory tract infection lag raha hai, aur right side mein early signs of possible chest infection bhi hain. Main aapko antibiotic deti hoon — Amoxicillin 500 mg din mein teen baar khaana hai saat din tak. Paracetamol 650 mg har 6 ghante bukhar ke liye. Cough syrup dinmein teen baar. Aur garam paani ke gargle kariye.
+Doctor: Dekhiye, aapko upper respiratory tract infection lag raha hai, aur right side mein early signs of possible chest infection bhi hain. Main aapko antibiotic deti hoon, Amoxicillin 500 mg din mein teen baar khaana hai saat din tak. Paracetamol 650 mg har 6 ghante bukhar ke liye. Cough syrup dinmein teen baar. Aur garam paani ke gargle kariye.
 
 Patient: Koi test karana padega Doctor?
 
@@ -107,7 +107,7 @@ Doctor: Jaldi theek hoiye. Apna khayal rakhiye.`,
   },
   {
     id: "ta-pediatrics",
-    title: "குழந்தைக்கு காய்ச்சல் — Child Fever",
+    title: "குழந்தைக்கு காய்ச்சல் (Child Fever)",
     language: "Tamil",
     languageCode: "ta",
     specialty: "pediatrics",
@@ -136,11 +136,11 @@ Patient: Actually Doctor, avanukku rendu vayasula oru appointment miss pannitten
 
 Doctor: Sari, naan avana check pannaren. Arun, kunju... naan konjam paakaren aa... Sari. Temperature ippo 102.6 irukku. Rendu kannilayum conjunctivitis irukku. Vaaikkulla Koplik spots irukku. Rash trunk-um kaikkum spread aayirukku. Throat red-a irukku. Lungs clear.
 
-Doctor: Amma, indha findings vachu paathaa — high fever, red eyes, Koplik spots, mattum mugathula irundhu keela spread aana rash — measles-a irukalaam nu doubt.
+Doctor: Amma, indha findings vachu paathaa, high fever, red eyes, Koplik spots, mattum mugathula irundhu keela spread aana rash, measles-a irukalaam nu doubt.
 
 Patient: Aiyayo, measles-a Doctor? Danger-a irukkaa?
 
-Doctor: Naanga closely monitor pannanum. Confirm pannaradhukku blood test edukaren, complications um check pannaren. Ippo paracetamol kudukaren fever-ukku — weight vachu dose calculate pannuven. Vitamin A supplement measles-ku romba mukkiyam. Adhigama thanni kudikkanum. Vera pasangalodu vidama isolate pannunga, measles romba fast-a spread aagum.
+Doctor: Naanga closely monitor pannanum. Confirm pannaradhukku blood test edukaren, complications um check pannaren. Ippo paracetamol kudukaren fever-ukku, weight vachu dose calculate pannuven. Vitamin A supplement measles-ku romba mukkiyam. Adhigama thanni kudikkanum. Vera pasangalodu vidama isolate pannunga, measles romba fast-a spread aagum.
 
 Patient: Naan eppo thirumba varanum?
 

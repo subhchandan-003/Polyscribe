@@ -64,7 +64,7 @@ OUTPUT INSTRUCTIONS:
 
 CLINICAL DOCUMENTATION RULES:
 - Use professional medical terminology appropriate to the output language
-- Be concise but thorough — capture all clinically relevant details from the transcript
+- Be concise but thorough, capturing all clinically relevant details from the transcript
 - Follow the specialty-specific documentation guidelines above closely
 - If a SOAP section has no relevant data in the transcript, write "Not documented in this consultation" (in the output language)
 - Do not invent or hallucinate information not present in the transcript

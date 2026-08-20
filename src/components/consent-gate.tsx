@@ -44,7 +44,7 @@ export function ConsentGate({ onConsent }: ConsentGateProps) {
           </li>
           <li className="flex items-start gap-2">
             <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-            Only the structured SOAP note is saved — no raw audio is retained
+            Only the structured SOAP note is saved. No raw audio is retained
           </li>
         </ul>
       </div>

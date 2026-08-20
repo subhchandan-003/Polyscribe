@@ -2,7 +2,7 @@
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-/* Pre-computed widths — no Math.random() on render */
+/* Pre-computed widths, no Math.random() on render */
 const SKELETON_WIDTHS = ["95%", "72%", "88%", "65%", "80%", "92%", "70%", "85%"];
 
 interface TranscriptPanelProps {

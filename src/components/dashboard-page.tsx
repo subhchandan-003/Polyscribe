@@ -109,13 +109,13 @@ export function DashboardPage({ onBack }: DashboardPageProps) {
     {
       label: "Languages Used",
       value: stats.languagesUsed.length,
-      sub: stats.languagesUsed.map((l) => LANG_NAMES[l] || l).join(", ") || "—",
+      sub: stats.languagesUsed.map((l) => LANG_NAMES[l] || l).join(", ") || "N/A",
       icon: Globe,
       color: "text-violet-500",
     },
     {
       label: "Avg. Consultation",
-      value: stats.avgDuration > 0 ? `${Math.floor(stats.avgDuration / 60)}m ${stats.avgDuration % 60}s` : "—",
+      value: stats.avgDuration > 0 ? `${Math.floor(stats.avgDuration / 60)}m ${stats.avgDuration % 60}s` : "N/A",
       sub: `${stats.totalNotes} sessions recorded`,
       icon: TrendingUp,
       color: "text-amber-500",
@@ -233,7 +233,7 @@ export function DashboardPage({ onBack }: DashboardPageProps) {
                 At India Pro pricing (₹3,500/mo)
               </p>
               <p className="font-heading text-2xl font-bold text-violet-500">₹70</p>
-              <p className="text-xs text-muted-foreground">per consultation — less than the cost of a chai</p>
+              <p className="text-xs text-muted-foreground">per consultation, less than the cost of a chai</p>
             </div>
           </div>
         </Card>

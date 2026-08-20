@@ -114,13 +114,13 @@ export function PatientDashboard() {
           <HealthCard
             icon={Clock}
             label="Last Visit"
-            value="—"
+            value="N/A"
             sub="No visits recorded yet"
           />
           <HealthCard
             icon={Globe}
             label="Languages"
-            value="—"
+            value="N/A"
             sub="Multilingual consultations"
           />
         </div>

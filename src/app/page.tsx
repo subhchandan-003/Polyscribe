@@ -120,7 +120,7 @@ export default function Home() {
       } catch (err) {
         let msg = "Something went wrong";
         if (err instanceof TypeError && err.message.includes("fetch")) {
-          msg = "Network error — check your internet connection and try again.";
+          msg = "Network error. Check your internet connection and try again.";
         } else if (err instanceof Error) {
           msg = err.message;
         }
@@ -282,7 +282,7 @@ export default function Home() {
 
             {/* Recording / Idle State.
                 Pre-consent: consent gate + consultation setup live side by side.
-                Once consent is confirmed, the setup panel goes away — the
+                Once consent is confirmed, the setup panel goes away. The
                 recorder is the only thing on screen. */}
             {(appState === "idle" || appState === "recording") && (
               <div
@@ -312,8 +312,8 @@ export default function Home() {
                       Start <span className="text-gradient-brand">Recording</span>
                     </h2>
                     <p className="text-muted-foreground text-base max-w-md leading-relaxed">
-                      Record your patient conversation — PolyScribe handles transcription,
-                      diarization, and SOAP structuring automatically.
+                      Record your patient conversation and PolyScribe takes care of
+                      transcription, diarization, and SOAP structuring automatically.
                     </p>
                   </div>
 
@@ -332,7 +332,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Side panel — Specialty + Language, only while consent hasn't been given yet */}
+                {/* Side panel: specialty + language, only while consent hasn't been given yet */}
                 {!consented && (
                   <aside className="w-full lg:sticky lg:top-20">
                     <Card className="p-6">
@@ -360,7 +360,7 @@ export default function Home() {
               </div>
             )}
 
-            {/* Results — Two Panel Layout */}
+            {/* Results: two panel layout */}
             {(showResults || (appState === "transcribing" && transcript)) && (
               <div className="space-y-5 animate-fade-in-up">
                 {/* Results header bar */}

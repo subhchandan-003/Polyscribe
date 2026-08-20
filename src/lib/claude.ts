@@ -38,13 +38,13 @@ export async function structureSOAPNote(
   });
 
   // Claude Sonnet 5 runs adaptive thinking by default, so a `thinking` block
-  // can precede the `text` block — don't assume content[0] is the answer.
+  // can precede the `text` block, so don't assume content[0] is the answer.
   const content = message.content.find((block) => block.type === "text");
   if (!content) {
     throw new Error("Unexpected response type from Claude");
   }
 
-  // Robust JSON extraction — handle markdown fences and leading text
+  // Robust JSON extraction, handles markdown fences and leading text
   let jsonText = content.text.trim();
   const fenceMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)```/);
   if (fenceMatch) {

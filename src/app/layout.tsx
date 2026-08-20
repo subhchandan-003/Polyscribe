@@ -20,7 +20,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PolyScribe — Multilingual AI Clinical Scribe",
+  title: "PolyScribe: Multilingual AI Clinical Scribe",
   description:
     "An ambient multilingual AI scribe that turns any doctor-patient conversation into structured SOAP notes in seconds.",
 };

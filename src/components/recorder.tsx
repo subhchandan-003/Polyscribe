@@ -160,7 +160,7 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
 
       {/* ── Waveform panel ── */}
       <div className="relative w-full overflow-hidden rounded-2xl glass">
-        {/* Scan-line sweep — only during recording */}
+        {/* Scan-line sweep, only during recording */}
         {isRecording && (
           <div
             className="absolute inset-0 pointer-events-none z-10 animate-scan-line"
@@ -218,7 +218,7 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" />
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-destructive" />
           </span>
-          Recording — patient consent required
+          Recording (patient consent required)
         </div>
       )}
 

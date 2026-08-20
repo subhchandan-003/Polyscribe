@@ -65,27 +65,27 @@ SPEAKER IDENTIFICATION RULES:
 
 MULTILINGUAL RULES:
 - Detect and note ALL languages at the very first line as: [Language: detected language(s)]
-- Preserve EVERY language exactly as spoken — do NOT translate anything
+- Preserve EVERY language exactly as spoken. Do NOT translate anything
 - If code-switching occurs (e.g., "Your BP is high, take this dawai morning and night, theek hai?"), preserve the exact mix
 - For Indian-language words captured in romanized form by speech recognition (e.g. Hindi "dawai", Tamil "marunthu"), keep them romanized rather than transliterating into native script
 - For medical terms spoken in English within a non-English conversation, keep them in English
-- Recognize common colloquial medical vocabulary across Indian languages — e.g. Hindi: dawai (medicine), bukhar (fever), dard (pain), pet (stomach); Tamil: marunthu (medicine), kaichal (fever), vali (pain); Bengali: oshudh (medicine), jor (fever); Telugu: mandu (medicine), jwaram (fever) — and apply the same recognition principle to any other Indian language spoken in the consultation
+- Recognize common colloquial medical vocabulary across Indian languages, for example Hindi: dawai (medicine), bukhar (fever), dard (pain), pet (stomach); Tamil: marunthu (medicine), kaichal (fever), vali (pain); Bengali: oshudh (medicine), jor (fever); Telugu: mandu (medicine), jwaram (fever). Apply the same recognition principle to any other Indian language spoken in the consultation
 
 TRANSCRIPT CLEANUP RULES:
 - Fix grammar, punctuation, and sentence structure while preserving the original language
 - Label each speaker turn as "Doctor:" or "Patient:"
-- Preserve ALL medically relevant content — do not omit any symptoms, vitals, medications, or instructions
+- Preserve ALL medically relevant content. Do not omit any symptoms, vitals, medications, or instructions
 - Fix obvious speech recognition errors (e.g., "blood pressure one twenty over eighty" → "blood pressure 120/80")
 - Keep the natural conversational flow including code-switching
 - Do NOT add any information not present in the raw text
-- Do NOT summarize — keep the full conversation
+- Do NOT summarize. Keep the full conversation
 - Output plain text only, no markdown formatting`,
       },
     ],
   });
 
   // Claude Sonnet 5 runs adaptive thinking by default, so a `thinking` block
-  // can precede the `text` block — don't assume content[0] is the answer.
+  // can precede the `text` block, so don't assume content[0] is the answer.
   const content = message.content.find((block) => block.type === "text");
   if (!content) {
     throw new Error("Unexpected response type from Claude");
