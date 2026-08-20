@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DEMO_CASES, type DemoCase } from "@/lib/demo-transcripts";
-import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
+import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
 
 interface DemoModeProps {
   onRunDemo: (demoCase: DemoCase) => void;
@@ -35,12 +35,12 @@ export function DemoMode({ onRunDemo, onBack, isProcessing }: DemoModeProps) {
       </div>
 
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-medium px-3 py-1.5 rounded-full mb-4">
+        <div className="inline-flex items-center gap-2 rounded-full bg-accent text-primary text-xs font-semibold px-3.5 py-1.5 mb-4">
           <Sparkles className="h-3.5 w-3.5" />
           Demo Mode
         </div>
-        <h2 className="font-heading text-2xl font-semibold tracking-tight mb-2">
-          Try PolyScribe Instantly
+        <h2 className="font-heading text-3xl font-bold tracking-tight mb-2">
+          Try <span className="text-gradient-brand">PolyScribe</span> Instantly
         </h2>
         <p className="text-muted-foreground text-sm max-w-md mx-auto">
           Select a sample consultation below. PolyScribe will process the
@@ -52,24 +52,23 @@ export function DemoMode({ onRunDemo, onBack, isProcessing }: DemoModeProps) {
       <div className="grid gap-4">
         {DEMO_CASES.map((demo) => {
           const SpecIcon = SPECIALTY_ICONS[demo.specialty];
-          const colors = SPECIALTY_COLORS[demo.specialty];
           return (
           <Card
             key={demo.id}
-            className={`p-5 cursor-pointer card-hover-lift ${
+            className={`p-5 cursor-pointer card-hover-lift ring-2 ${
               selected === demo.id
-                ? "ring-2 ring-primary border-primary/50 shadow-md"
-                : ""
+                ? "ring-primary/50 bg-accent/30"
+                : "ring-transparent"
             }`}
             onClick={() => setSelected(demo.id)}
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2.5 mb-1.5">
-                  <div className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${colors.bg} ${colors.text}`}>
+                  <div className="h-11 w-11 rounded-xl bg-accent text-primary flex items-center justify-center shrink-0">
                     <SpecIcon className="h-5 w-5" />
                   </div>
-                  <h3 className="font-heading font-semibold text-foreground truncate">
+                  <h3 className="font-heading font-bold text-foreground truncate">
                     {demo.title}
                   </h3>
                 </div>

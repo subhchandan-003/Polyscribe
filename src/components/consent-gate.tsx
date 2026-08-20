@@ -15,35 +15,35 @@ export function ConsentGate({ onConsent }: ConsentGateProps) {
   return (
     <Card className="w-full max-w-md p-6 space-y-5">
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+        <div className="h-11 w-11 rounded-xl bg-accent flex items-center justify-center shrink-0">
           <ShieldCheck className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h3 className="font-heading text-sm font-semibold">Patient Consent Required</h3>
-          <p className="text-[11px] text-muted-foreground">
+          <h3 className="font-heading text-sm font-bold">Patient Consent Required</h3>
+          <p className="text-xs text-muted-foreground">
             Before starting the recording
           </p>
         </div>
       </div>
 
-      <div className="space-y-3 text-xs text-muted-foreground leading-relaxed">
+      <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
         <p>
           PolyScribe will record this consultation to generate a clinical SOAP
           note. Please ensure the following:
         </p>
-        <ul className="space-y-1.5 ml-4">
+        <ul className="space-y-2 ml-1">
           <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
+            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
             The patient has been verbally informed that the conversation will be
             recorded
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
+            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
             Audio is processed in-memory only and deleted immediately after
             transcription
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
+            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
             Only the structured SOAP note is saved — no raw audio is retained
           </li>
         </ul>
@@ -51,11 +51,11 @@ export function ConsentGate({ onConsent }: ConsentGateProps) {
 
       {/* Compliance badges */}
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-muted text-[10px] font-medium text-muted-foreground">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-accent text-xs font-medium text-secondary-foreground">
           <Landmark className="h-3 w-3" />
           DPDP Act 2023
         </span>
-        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-muted text-[10px] font-medium text-muted-foreground">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-accent text-xs font-medium text-secondary-foreground">
           <Lock className="h-3 w-3" />
           No audio persistence
         </span>
@@ -67,7 +67,7 @@ export function ConsentGate({ onConsent }: ConsentGateProps) {
           type="checkbox"
           checked={checked}
           onChange={(e) => setChecked(e.target.checked)}
-          className="mt-0.5 h-4 w-4 rounded border-border text-primary focus:ring-primary cursor-pointer accent-[oklch(0.65_0.15_180)]"
+          className="mt-0.5 h-4 w-4 rounded border-border text-primary focus:ring-primary cursor-pointer accent-primary"
         />
         <span className="text-sm text-foreground/80 leading-snug group-hover:text-foreground transition-colors">
           Patient has been informed and consented to recording this consultation
@@ -76,7 +76,7 @@ export function ConsentGate({ onConsent }: ConsentGateProps) {
 
       {/* Warning if not checked */}
       {!checked && (
-        <div className="flex items-center gap-2 text-[11px] text-amber-600 bg-amber-500/5 px-3 py-2 rounded-md">
+        <div className="flex items-center gap-2 text-xs font-medium text-amber-600 rounded-xl bg-amber-500/10 px-3.5 py-2.5">
           <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
           Consent must be confirmed before recording can begin
         </div>

@@ -1,25 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Header } from "@/components/header";
+import { useState } from "react";
+import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
-import { FileText, Clock, Globe, Shield, Heart, Sparkles, Mic, Languages } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { FileText, Clock, Globe, Shield, Heart, Mic, Languages, LogOut, Activity } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
-/* ── Decorative floating blob — pure CSS, no images ── */
-function Blob({
-  className,
-  delay = "0s",
-}: {
-  className: string;
-  delay?: string;
-}) {
-  return (
-    <div
-      className={`absolute rounded-full pointer-events-none ${className} animate-float`}
-      style={{ animationDelay: delay }}
-    />
-  );
+function computeGreeting(): string {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
 }
 
 /* ── Stat card ── */
@@ -28,92 +20,86 @@ function HealthCard({
   label,
   value,
   sub,
-  accent,
-  delay,
 }: {
   icon: React.ElementType;
   label: string;
   value: string;
   sub: string;
-  accent: string;
-  delay: string;
 }) {
   return (
-    <Card
-      className="stagger-child p-5 rounded-2xl border-0 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden relative"
-      style={{ animationDelay: delay }}
-    >
-      {/* Soft tinted bg blob */}
-      <div
-        className={`absolute -top-4 -right-4 h-20 w-20 rounded-full opacity-20 ${accent}`}
-      />
-      <div className={`h-10 w-10 rounded-xl flex items-center justify-center mb-3 ${accent} bg-opacity-20`}>
-        <Icon className="h-5 w-5" />
+    <Card className="p-5 relative overflow-hidden stat-card-accent">
+      <div className="h-10 w-10 rounded-xl bg-accent text-primary flex items-center justify-center mb-3">
+        <Icon className="h-4.5 w-4.5" />
       </div>
-      <p className="text-2xl font-bold tracking-tight">{value}</p>
-      <p className="text-xs font-semibold text-foreground/70 mt-0.5">{label}</p>
+      <p className="font-heading text-2xl font-bold tracking-tight">{value}</p>
+      <p className="text-xs font-semibold text-foreground/80 mt-0.5">{label}</p>
       <p className="text-[11px] text-muted-foreground mt-1 truncate">{sub}</p>
     </Card>
   );
 }
 
 export function PatientDashboard() {
-  const { user } = useAuth();
-  const [greeting, setGreeting] = useState("Hello");
-
-  useEffect(() => {
-    const h = new Date().getHours();
-    if (h < 12) setGreeting("Good morning");
-    else if (h < 17) setGreeting("Good afternoon");
-    else setGreeting("Good evening");
-  }, []);
-
+  const { user, logout } = useAuth();
+  const [greeting] = useState(computeGreeting);
   const firstName = user?.name.split(" ")[0] ?? "there";
 
   return (
-    <div className="patient-portal-bg min-h-screen flex flex-col">
-      <Header />
+    <div className="min-h-screen flex flex-col relative">
+      <div className="gradient-mesh" />
+
+      {/* ── Top bar ── */}
+      <header className="sticky top-0 z-40 px-3 pt-3 shrink-0">
+        <div className="max-w-4xl mx-auto w-full h-14 flex items-center px-4 rounded-2xl glass">
+          <div className="h-8 w-8 rounded-xl bg-gradient-brand flex items-center justify-center shadow-md shadow-teal-500/25 mr-2.5">
+            <Activity className="h-4 w-4 text-white" />
+          </div>
+          <span className="font-heading text-[15px] font-bold tracking-tight">PolyScribe</span>
+          <span className="ml-2.5 text-[10px] font-semibold text-primary rounded-full bg-accent px-2 py-0.5">
+            Patient
+          </span>
+          <div className="flex-1" />
+          {user && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground hidden sm:inline">{user.name}</span>
+              <Button variant="ghost" size="icon-sm" onClick={logout} className="text-muted-foreground hover:text-foreground rounded-xl">
+                <LogOut className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          )}
+        </div>
+      </header>
 
       <main className="flex-1 max-w-4xl mx-auto w-full px-6 py-8">
-
         {/* ─────────────────────────────────────────────
-            WELCOME HERO
+            WELCOME
         ───────────────────────────────────────────── */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 via-teal-500 to-teal-600 text-white p-8 mb-6 animate-fade-scale-in">
-          {/* Decorative blobs */}
-          <Blob className="h-40 w-40 bg-white/10 -top-10 -right-10" delay="0s" />
-          <Blob className="h-24 w-24 bg-white/8  bottom-2  -right-4"  delay="1.2s" />
-          <Blob className="h-16 w-16 bg-white/12 top-4    left-1/2"   delay="0.6s" />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Card className="p-7 mb-6">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">
+              {greeting},
+            </p>
+            <h2 className="font-heading text-3xl font-bold tracking-tight">
+              <span className="text-gradient-brand">{firstName}</span>
+            </h2>
+            <p className="text-muted-foreground text-sm mt-2 max-w-md leading-relaxed">
+              Your health story, organized and always private.
+            </p>
 
-          <div className="relative z-10 flex items-center justify-between">
-            <div>
-              <p className="text-emerald-100/80 text-sm font-medium mb-1">
-                {greeting},
-              </p>
-              <h2 className="font-heading text-2xl font-bold tracking-tight">{firstName}</h2>
-              <p className="text-emerald-100/70 text-sm mt-2 max-w-xs leading-relaxed">
-                Your health story, beautifully organized and always private.
-              </p>
+            <div className="flex items-center gap-2 mt-5 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary rounded-full bg-accent px-3 py-1.5">
+                <Shield className="h-3 w-3" />
+                End-to-end encrypted
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary rounded-full bg-accent px-3 py-1.5">
+                DPDP Act 2023 compliant
+              </span>
             </div>
-
-            {/* Animated health icon */}
-            <div className="hidden sm:flex h-16 w-16 rounded-2xl bg-white/15 items-center justify-center shrink-0 backdrop-blur-sm animate-pulse-gentle">
-              <Heart className="h-8 w-8 text-white" />
-            </div>
-          </div>
-
-          {/* Bottom sparkle row */}
-          <div className="relative z-10 flex items-center gap-2 mt-5">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium bg-white/15 text-white/90 rounded-full px-3 py-1 backdrop-blur-sm">
-              <Shield className="h-3 w-3" />
-              End-to-end encrypted
-            </span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium bg-white/15 text-white/90 rounded-full px-3 py-1 backdrop-blur-sm">
-              <Sparkles className="h-3 w-3" />
-              DPDP Act 2023 compliant
-            </span>
-          </div>
-        </div>
+          </Card>
+        </motion.div>
 
         {/* ─────────────────────────────────────────────
             STATS ROW
@@ -124,42 +110,36 @@ export function PatientDashboard() {
             label="Consultation Notes"
             value="0"
             sub="Records shared by your doctor"
-            accent="bg-emerald-500 text-emerald-700"
-            delay="0.05s"
           />
           <HealthCard
             icon={Clock}
             label="Last Visit"
             value="—"
             sub="No visits recorded yet"
-            accent="bg-teal-500 text-teal-700"
-            delay="0.12s"
           />
           <HealthCard
             icon={Globe}
             label="Languages"
             value="—"
             sub="Multilingual consultations"
-            accent="bg-cyan-500 text-cyan-700"
-            delay="0.19s"
           />
         </div>
 
         {/* ─────────────────────────────────────────────
-            HOW IT WORKS — real journey, colorful step badges
+            HOW IT WORKS
         ───────────────────────────────────────────── */}
-        <Card className="rounded-2xl p-6 mb-6 animate-fade-scale-in" style={{ animationDelay: "0.18s" }}>
-          <h3 className="text-sm font-semibold text-foreground tracking-tight mb-5">
+        <Card className="p-6 mb-6">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-5">
             How your notes reach you
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
-              { icon: Mic, bg: "bg-sky-100", text: "text-sky-600", title: "Consultation recorded", desc: "Your doctor records the visit with your consent" },
-              { icon: Languages, bg: "bg-violet-100", text: "text-violet-600", title: "AI structures the note", desc: "Transcribed and organized into a clinical SOAP note" },
-              { icon: Heart, bg: "bg-emerald-100", text: "text-emerald-600", title: "Shared with you", desc: "The finished note appears here, private to you" },
+              { icon: Mic, title: "Consultation recorded", desc: "Your doctor records the visit with your consent" },
+              { icon: Languages, title: "AI structures the note", desc: "Transcribed and organized into a clinical SOAP note" },
+              { icon: Heart, title: "Shared with you", desc: "The finished note appears here, private to you" },
             ].map((step) => (
               <div key={step.title} className="flex flex-col items-center text-center gap-2.5">
-                <div className={`h-12 w-12 rounded-full flex items-center justify-center ${step.bg} ${step.text}`}>
+                <div className="h-12 w-12 rounded-2xl bg-accent text-primary flex items-center justify-center">
                   <step.icon className="h-5 w-5" />
                 </div>
                 <div>
@@ -174,10 +154,9 @@ export function PatientDashboard() {
         {/* ─────────────────────────────────────────────
             RECORDS LIST
         ───────────────────────────────────────────── */}
-        <Card className="rounded-2xl border-emerald-100/60 shadow-sm overflow-hidden animate-fade-scale-in" style={{ animationDelay: "0.22s" }}>
-          {/* Card header */}
-          <div className="px-6 pt-5 pb-4 border-b border-emerald-50">
-            <h3 className="text-sm font-semibold text-foreground tracking-tight">
+        <Card className="overflow-hidden">
+          <div className="px-6 pt-5 pb-4 border-b border-border/60">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Recent Consultations
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -185,14 +164,12 @@ export function PatientDashboard() {
             </p>
           </div>
 
-          {/* Empty state */}
           <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-            {/* Animated icon */}
-            <div className="h-16 w-16 rounded-2xl bg-emerald-50 flex items-center justify-center mb-4 animate-pulse-gentle">
-              <Heart className="h-8 w-8 text-emerald-400" />
+            <div className="h-16 w-16 rounded-2xl bg-accent flex items-center justify-center mb-4">
+              <Heart className="h-6 w-6 text-primary" />
             </div>
 
-            <p className="text-sm font-medium text-foreground/70">
+            <p className="text-sm font-medium text-foreground/80">
               No consultation records yet
             </p>
             <p className="text-xs text-muted-foreground mt-1.5 max-w-xs leading-relaxed">
@@ -200,7 +177,6 @@ export function PatientDashboard() {
               structured notes here. They will always be private to you.
             </p>
 
-            {/* Reassurance chips */}
             <div className="flex flex-wrap justify-center gap-2 mt-5">
               {[
                 { icon: Shield, text: "Private by default" },
@@ -209,7 +185,7 @@ export function PatientDashboard() {
               ].map(({ icon: Icon, text }) => (
                 <span
                   key={text}
-                  className="inline-flex items-center gap-1.5 text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-3 py-1"
+                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground rounded-full bg-muted/70 px-2.5 py-1.5"
                 >
                   <Icon className="h-3 w-3" />
                   {text}
@@ -221,9 +197,9 @@ export function PatientDashboard() {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-emerald-100/50 py-4 mt-4">
+      <footer className="py-5 mt-4 relative">
         <div className="max-w-4xl mx-auto px-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-          <Shield className="h-3.5 w-3.5 text-emerald-500" />
+          <Shield className="h-3.5 w-3.5" />
           PolyScribe protects your health data under India&apos;s DPDP Act 2023
         </div>
       </footer>

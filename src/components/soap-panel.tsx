@@ -12,19 +12,20 @@ interface SOAPPanelProps {
   isLoading: boolean;
 }
 
+/* Distinct legend hues for quick section scanning — deliberately avoids
+ * green, which is reserved as the single UI accent color. */
 const SECTIONS: {
   key: keyof SOAPNote;
   label: string;
   color: string;
   hex: string;
-  bg: string;
 }[] = [
-  { key: "subjective",  label: "Subjective",  color: "text-blue-600",   hex: "#3b82f6", bg: "bg-blue-500/8"   },
-  { key: "objective",   label: "Objective",   color: "text-emerald-600", hex: "#10b981", bg: "bg-emerald-500/8" },
-  { key: "assessment",  label: "Assessment",  color: "text-amber-600",   hex: "#f59e0b", bg: "bg-amber-500/8"   },
-  { key: "plan",        label: "Plan",        color: "text-violet-600",  hex: "#8b5cf6", bg: "bg-violet-500/8"  },
-  { key: "medications", label: "Medications", color: "text-rose-600",    hex: "#f43f5e", bg: "bg-rose-500/8"    },
-  { key: "followUp",    label: "Follow-up",   color: "text-teal-600",    hex: "#14b8a6", bg: "bg-teal-500/8"    },
+  { key: "subjective",  label: "Subjective",  color: "text-blue-400",   hex: "#60a5fa" },
+  { key: "objective",   label: "Objective",   color: "text-cyan-400",   hex: "#22d3ee" },
+  { key: "assessment",  label: "Assessment",  color: "text-amber-400",  hex: "#fbbf24" },
+  { key: "plan",        label: "Plan",        color: "text-violet-400", hex: "#a78bfa" },
+  { key: "medications", label: "Medications", color: "text-rose-400",   hex: "#fb7185" },
+  { key: "followUp",    label: "Follow-up",   color: "text-orange-400", hex: "#fb923c" },
 ];
 
 /* Pre-computed skeleton widths — avoids Math.random() on every render */
@@ -79,11 +80,13 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
       day: "numeric",
     });
 
+    // Print output stays light/paper-styled regardless of the app's dark
+    // theme — a printed clinical record should read cleanly on paper.
     const sectionsHtml = SECTIONS.map(
       (s) => `
         <div style="margin-bottom:20px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-            <span style="display:inline-block;width:3px;height:18px;border-radius:2px;background:${s.hex};margin-right:2px;"></span>
+            <span style="display:inline-block;width:3px;height:18px;background:${s.hex};margin-right:2px;"></span>
             <h3 style="margin:0;font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:#555;font-weight:600;">${s.label}</h3>
           </div>
           <p style="margin:0;font-size:14px;line-height:1.65;color:#1a1a1a;white-space:pre-wrap;padding-left:11px;">${escapeHtml(currentNote[s.key])}</p>
@@ -96,7 +99,7 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
 <html><head><meta charset="utf-8" /><title>SOAP Note — PolyScribe</title>
 <style>
   @media print { body { margin:0; } @page { margin:20mm 15mm; } }
-  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:700px;margin:40px auto;padding:0 20px;color:#1a1a1a; }
+  body { font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;max-width:700px;margin:40px auto;padding:0 20px;color:#1a1a1a; }
 </style></head><body>
   <div style="border-bottom:2px solid #0d9488;padding-bottom:12px;margin-bottom:24px;">
     <h1 style="margin:0;font-size:20px;color:#0d9488;">PolyScribe</h1>
@@ -132,19 +135,19 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
     return (
       <div className="h-full flex flex-col">
         <div className="flex items-center gap-2 mb-5">
-          <div className="h-1 w-4 rounded-full bg-primary/40" />
-          <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+          <div className="h-2 w-2 rounded-full bg-primary" />
+          <h2 className="text-sm font-bold text-foreground">
             SOAP Note
           </h2>
         </div>
         <div className="flex-1 space-y-5">
           {SECTIONS.map((s, idx) => (
-            <div key={s.key} className="space-y-2 pl-3" style={{ borderLeft: `2px solid ${s.hex}40` }}>
+            <div key={s.key} className="space-y-2 pl-3.5 rounded-r-lg" style={{ borderLeft: `3px solid ${s.hex}40` }}>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-16 bg-muted rounded animate-pulse" />
+                <div className="h-3 w-16 rounded-full bg-muted animate-pulse" />
               </div>
-              <div className="h-3.5 bg-muted rounded animate-pulse w-full" />
-              <div className="h-3.5 bg-muted rounded animate-pulse" style={{ width: SKELETON_WIDTHS[idx] }} />
+              <div className="relative h-3.5 rounded-full bg-muted overflow-hidden animate-shimmer w-full" />
+              <div className="relative h-3.5 rounded-full bg-muted overflow-hidden animate-shimmer" style={{ width: SKELETON_WIDTHS[idx] }} />
             </div>
           ))}
         </div>
@@ -171,22 +174,22 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
       {/* Toolbar */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="h-1 w-4 rounded-full bg-primary/50" />
-          <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+          <div className="h-2 w-2 rounded-full bg-primary" />
+          <h2 className="text-sm font-bold text-foreground">
             SOAP Note
           </h2>
         </div>
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-1">
           <Button variant="ghost" size="sm" onClick={handleCopy} title="Copy to clipboard"
-            className="h-7 px-2 text-muted-foreground hover:text-foreground">
-            {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+            className="h-8 px-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60">
+            {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
           </Button>
           <Button variant="ghost" size="sm" onClick={handleExportTxt} title="Export .txt"
-            className="h-7 px-2 text-muted-foreground hover:text-foreground">
+            className="h-8 px-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60">
             <Download className="h-3.5 w-3.5" />
           </Button>
           <Button variant="ghost" size="sm" onClick={handleExportPdf} title="Print / Export PDF"
-            className="h-7 px-2 text-muted-foreground hover:text-foreground">
+            className="h-8 px-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60">
             <Printer className="h-3.5 w-3.5" />
           </Button>
         </div>
@@ -198,11 +201,11 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
             <div key={section.key}>
               {/* Section with clinical left-border accent */}
               <div
-                className="pl-3 rounded-r-sm transition-colors"
-                style={{ borderLeft: `2.5px solid ${section.hex}` }}
+                className="pl-3.5 rounded-r-lg transition-colors"
+                style={{ borderLeft: `3px solid ${section.hex}` }}
               >
                 <h3
-                  className={`text-[10px] font-bold uppercase tracking-widest mb-1.5 ${section.color}`}
+                  className={`text-xs font-bold uppercase tracking-wide mb-1.5 ${section.color}`}
                 >
                   {section.label}
                 </h3>
@@ -212,13 +215,13 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
                   onBlur={(e) =>
                     handleSectionEdit(section.key, e.currentTarget.textContent ?? "")
                   }
-                  className={`text-sm leading-relaxed text-foreground/85 outline-none rounded-md px-2 py-1.5 -mx-2 transition-colors hover:${section.bg} focus:${section.bg} focus:ring-1 focus:ring-current/20`}
+                  className="text-sm leading-relaxed text-foreground/85 outline-none px-2.5 py-1.5 -mx-2.5 rounded-lg transition-colors hover:bg-muted/50 focus:bg-muted/50"
                 >
                   {currentNote[section.key]}
                 </div>
               </div>
               {idx < SECTIONS.length - 1 && (
-                <Separator className="mt-4 opacity-50" />
+                <Separator className="mt-4 opacity-40" />
               )}
             </div>
           ))}

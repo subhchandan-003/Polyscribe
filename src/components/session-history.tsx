@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { getSessions, deleteSession, type Session } from "@/lib/sessions";
 import { SPECIALTIES } from "@/lib/specialty-prompts";
-import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
+import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -103,11 +103,11 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
           Back
         </Button>
         <div>
-          <h2 className="font-heading text-xl font-semibold tracking-tight flex items-center gap-2">
+          <h2 className="font-heading text-xl font-bold tracking-tight flex items-center gap-2">
             <History className="h-5 w-5 text-primary" />
             Session History
           </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-sm text-muted-foreground mt-0.5">
             {sessions.length} consultation{sessions.length !== 1 ? "s" : ""} saved locally
           </p>
         </div>
@@ -116,7 +116,7 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
       {sessions.length === 0 ? (
         <Card className="p-12 flex flex-col items-center justify-center text-muted-foreground/50">
           <FileText className="h-10 w-10 mb-3 opacity-30" />
-          <p className="text-sm">No saved sessions yet</p>
+          <p className="text-sm font-medium">No saved sessions yet</p>
           <p className="text-xs mt-1">
             Completed consultations will appear here
           </p>
@@ -126,25 +126,24 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
           <div className="space-y-6">
             {Object.entries(grouped).map(([dateLabel, dateSessions]) => (
               <div key={dateLabel}>
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3 px-1">
                   {dateLabel}
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {dateSessions.map((session) => {
                     const spec = getSpecialtyInfo(session.specialty);
                     const SpecIcon = spec ? SPECIALTY_ICONS[spec.id] : Stethoscope;
-                    const colors = spec ? SPECIALTY_COLORS[spec.id] : SPECIALTY_COLORS.general;
                     const preview = session.soapNote.assessment.slice(0, 120);
                     return (
                       <Card
                         key={session.id}
-                        className="p-4 card-hover-lift cursor-pointer"
+                        className="p-4 card-hover-lift cursor-pointer group"
                         onClick={() => onLoadSession(session)}
                       >
                         <div className="flex items-start gap-3">
-                          {/* Specialty avatar badge */}
-                          <div className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${colors.bg} ${colors.text}`}>
-                            <SpecIcon className="h-4 w-4" />
+                          {/* Specialty icon */}
+                          <div className="h-10 w-10 rounded-xl bg-accent text-primary flex items-center justify-center shrink-0">
+                            <SpecIcon className="h-4.5 w-4.5" />
                           </div>
 
                           {/* Content */}
@@ -188,7 +187,7 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                              className="h-7 w-7 p-0 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleDelete(session.id);

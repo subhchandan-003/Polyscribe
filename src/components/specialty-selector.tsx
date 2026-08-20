@@ -11,10 +11,10 @@ interface SpecialtySelectorProps {
 export function SpecialtySelector({ value, onChange }: SpecialtySelectorProps) {
   return (
     <div className="w-full">
-      <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-3 block">
+      <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3 block">
         Specialty Template
       </label>
-      <div className="grid grid-cols-3 gap-x-1 gap-y-3">
+      <div className="grid grid-cols-3 gap-2">
         {SPECIALTIES.map((spec) => {
           const isSelected = value === spec.id;
           const Icon = SPECIALTY_ICONS[spec.id];
@@ -23,22 +23,14 @@ export function SpecialtySelector({ value, onChange }: SpecialtySelectorProps) {
             <button
               key={spec.id}
               onClick={() => onChange(spec.id)}
-              className="flex flex-col items-center gap-1.5 cursor-pointer group"
+              className={`flex flex-col items-center gap-1.5 py-3 rounded-xl cursor-pointer transition-all duration-300 ${
+                isSelected
+                  ? `${colors.bg} ${colors.text} ring-2 ${colors.ring} shadow-sm`
+                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+              }`}
             >
-              <span
-                className={`flex h-12 w-12 items-center justify-center rounded-full transition-all ${colors.bg} ${colors.text} ${
-                  isSelected
-                    ? `ring-2 ring-offset-2 ring-offset-card ${colors.ring} scale-105`
-                    : "opacity-70 group-hover:opacity-100 group-hover:scale-105"
-                }`}
-              >
-                <Icon className="h-5 w-5" />
-              </span>
-              <span
-                className={`text-[10.5px] font-medium leading-tight text-center ${
-                  isSelected ? "text-foreground" : "text-muted-foreground"
-                }`}
-              >
+              <Icon className="h-4.5 w-4.5" />
+              <span className="text-[11px] font-medium text-center leading-tight">
                 {spec.label === "General Practice" ? "General" : spec.label}
               </span>
             </button>

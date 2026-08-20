@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Mic, Square, AlertCircle, Radio } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface RecorderProps {
   onRecordingComplete: (rawText: string) => void;
@@ -159,38 +159,29 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
     <div className="flex flex-col items-center gap-6 w-full max-w-md mx-auto">
 
       {/* ── Waveform panel ── */}
-      <div className="relative w-full rounded-2xl overflow-hidden border border-border/60 bg-card">
+      <div className="relative w-full overflow-hidden rounded-2xl glass">
         {/* Scan-line sweep — only during recording */}
         {isRecording && (
           <div
             className="absolute inset-0 pointer-events-none z-10 animate-scan-line"
             style={{
               background:
-                "linear-gradient(90deg, transparent 0%, oklch(0.65 0.15 180 / 0.08) 40%, oklch(0.65 0.15 180 / 0.18) 50%, oklch(0.65 0.15 180 / 0.08) 60%, transparent 100%)",
+                "linear-gradient(90deg, transparent 0%, oklch(0.65 0.14 190 / 0.12) 40%, oklch(0.65 0.14 190 / 0.25) 50%, oklch(0.65 0.14 190 / 0.12) 60%, transparent 100%)",
               width: "25%",
             }}
           />
         )}
 
-        {/* Grid lines — clinical graph paper feel */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(0deg, oklch(0.4 0.1 185) 0px, transparent 1px, transparent 23px, oklch(0.4 0.1 185) 24px), repeating-linear-gradient(90deg, oklch(0.4 0.1 185) 0px, transparent 1px, transparent 23px, oklch(0.4 0.1 185) 24px)",
-          }}
-        />
-
-        <div className="relative z-20 px-4 pt-3 pb-3">
+        <div className="relative z-20 px-5 pt-4 pb-4">
           {/* Header row */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-mono font-semibold text-muted-foreground/60 uppercase tracking-widest">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Audio Monitor
             </span>
             {isRecording && (
-              <span className="flex items-center gap-1.5 text-[10px] font-medium text-red-500">
+              <span className="flex items-center gap-1.5 text-xs font-semibold text-destructive">
                 <Radio className="h-3 w-3" />
-                LIVE
+                Live
               </span>
             )}
           </div>
@@ -200,12 +191,12 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
             {analyserData.map((val, i) => (
               <div
                 key={i}
-                className="rounded-full transition-all duration-75 flex-1 max-w-[5px]"
+                className="transition-all duration-75 flex-1 max-w-[6px] rounded-full"
                 style={{
-                  height: `${Math.max(3, val * 80)}px`,
+                  height: `${Math.max(4, val * 80)}px`,
                   background: isRecording
-                    ? `oklch(${0.62 + val * 0.12} 0.16 ${180 - val * 20} / ${0.45 + val * 0.55})`
-                    : "oklch(0.85 0.02 250)",
+                    ? `linear-gradient(180deg, oklch(0.72 0.16 158 / ${0.55 + val * 0.45}), oklch(0.62 0.14 195 / ${0.55 + val * 0.45}))`
+                    : "oklch(0.85 0.02 210)",
                 }}
               />
             ))}
@@ -215,79 +206,74 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
 
       {/* ── Timer ── */}
       <div className="flex items-center gap-3">
-        <div className="font-mono text-4xl font-light tracking-widest text-foreground/80 tabular-nums">
+        <div className="font-heading text-4xl font-bold tracking-tight text-foreground/90 tabular-nums">
           {formatTime(duration)}
         </div>
       </div>
 
       {/* ── Recording status indicator ── */}
       {isRecording && (
-        <div className="flex items-center gap-2 text-sm text-red-500 font-medium">
+        <div className="flex items-center gap-2 text-sm text-destructive font-semibold rounded-full bg-destructive/10 px-3.5 py-1.5">
           <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-destructive" />
           </span>
-          Recording — Patient consent required
+          Recording — patient consent required
         </div>
       )}
 
       {/* ── Live transcript preview ── */}
-      {isRecording && liveText && (
-        <div className="w-full bg-muted/40 rounded-xl border border-border/50 px-4 py-3 max-h-28 overflow-y-auto">
-          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5">
-            Live Preview
-          </p>
-          <p className="text-sm text-foreground/70 font-mono leading-relaxed">
-            {liveText}
-            {/* Blinking cursor */}
-            <span className="inline-block w-0.5 h-3.5 bg-primary ml-0.5 align-middle animate-pulse" />
-          </p>
-        </div>
-      )}
-
-      {/* ── Main button with glow ring ── */}
-      <div className="relative flex items-center justify-center">
-        {/* Breathing ring behind button */}
-        {isRecording && (
-          <span
-            className="absolute inset-0 rounded-full"
-            style={{
-              margin: "-14px",
-              animation: "glow-ring 2s ease-in-out infinite",
-            }}
-          />
+      <AnimatePresence>
+        {isRecording && liveText && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="w-full rounded-2xl glass-subtle px-4 py-3 max-h-28 overflow-y-auto"
+          >
+            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+              Live Preview
+            </p>
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              {liveText}
+            </p>
+          </motion.div>
         )}
+      </AnimatePresence>
 
-        {/* Outer decorative ring (idle) */}
+      {/* ── Main button ── */}
+      <div className="relative flex items-center justify-center py-2">
         {!isRecording && !isProcessing && (
-          <span className="absolute inset-0 rounded-full border-2 border-primary/15"
-            style={{ margin: "-6px" }}
-          />
+          <>
+            <span className="absolute h-28 w-28 rounded-full animate-ring-expand bg-primary/10" />
+            <span className="absolute h-28 w-28 rounded-full animate-ring-expand bg-primary/10" style={{ animationDelay: "0.6s" }} />
+          </>
         )}
 
         {!isRecording ? (
-          <Button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.96 }}
             onClick={startRecording}
             disabled={isProcessing}
-            size="lg"
-            className="relative h-20 w-20 rounded-full bg-teal-600 hover:bg-teal-700 text-white shadow-lg shadow-teal-500/30 transition-all duration-200 hover:scale-105 active:scale-95 border-0"
+            className="relative h-20 w-20 rounded-full bg-gradient-brand text-white flex items-center justify-center shadow-xl shadow-teal-500/35 disabled:opacity-50 cursor-pointer transition-shadow"
           >
             <Mic className="h-8 w-8" />
-          </Button>
+          </motion.button>
         ) : (
-          <Button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.96 }}
             onClick={stopRecording}
-            size="lg"
-            variant="destructive"
-            className="relative h-20 w-20 rounded-full shadow-lg shadow-red-500/25 transition-all duration-200 hover:scale-105 active:scale-95"
+            className="relative h-20 w-20 rounded-full bg-destructive text-white flex items-center justify-center shadow-xl shadow-red-500/35 cursor-pointer animate-glow-pulse"
           >
             <Square className="h-7 w-7 fill-current" />
-          </Button>
+          </motion.button>
         )}
       </div>
 
       {/* ── Helper text ── */}
-      <p className="text-xs text-muted-foreground text-center max-w-xs leading-relaxed">
+      <p className="text-sm text-muted-foreground text-center max-w-xs leading-relaxed">
         {isRecording
           ? "Audio is processed in-memory and deleted after note generation."
           : isProcessing
@@ -297,7 +283,7 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
 
       {/* ── Error ── */}
       {error && (
-        <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 px-4 py-2.5 rounded-xl w-full">
+        <div className="flex items-center gap-2 text-sm text-destructive rounded-xl bg-destructive/10 border border-destructive/25 px-4 py-2.5 w-full">
           <AlertCircle className="h-4 w-4 shrink-0" />
           {error}
         </div>

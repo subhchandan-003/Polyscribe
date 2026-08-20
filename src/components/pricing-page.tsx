@@ -215,7 +215,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required={required}
-        className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+        className="w-full h-10 px-3 rounded-xl border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
       />
     </div>
   );
@@ -240,7 +240,7 @@ function SelectField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           required
-          className="w-full h-10 pl-3 pr-8 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all appearance-none cursor-pointer"
+          className="w-full h-10 pl-3 pr-8 rounded-xl border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none cursor-pointer"
         >
           {options.map((o) => (
             <option key={o.value} value={o.value}>{o.label}</option>
@@ -260,16 +260,16 @@ function PlanPill({
 }) {
   const name = region === "india" ? tier.nameIndia : tier.nameIntl;
   return (
-    <div className="flex items-center justify-between bg-teal-50 border border-teal-100 rounded-xl px-4 py-3 mb-5">
+    <div className="flex items-center justify-between rounded-xl bg-accent/40 px-4 py-3 mb-5">
       <div>
-        <p className="text-xs font-semibold text-teal-700 uppercase tracking-wider">
+        <p className="text-xs font-semibold text-primary uppercase tracking-wider">
           Selected Plan
         </p>
         <p className="text-sm font-bold text-foreground mt-0.5">{name}</p>
         {sub && <p className="text-[11px] text-muted-foreground mt-0.5">{sub}</p>}
       </div>
       <div className="text-right">
-        <p className="text-xl font-bold text-teal-700 tabular-nums">{main}</p>
+        <p className="text-xl font-bold text-primary tabular-nums">{main}</p>
         {tier.period && (
           <p className="text-[10px] text-muted-foreground">{tier.period}</p>
         )}
@@ -320,7 +320,7 @@ function TrialModal({
 
   return (
     <Modal onClose={onClose}>
-      <Card className="p-6 shadow-2xl shadow-black/20 border-border/60">
+      <Card className="p-6 border-border">
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
@@ -344,8 +344,8 @@ function TrialModal({
         {/* Success state */}
         {submitted ? (
           <div className="flex flex-col items-center py-6 gap-4 text-center animate-fade-scale-in">
-            <div className="h-16 w-16 rounded-full bg-emerald-50 flex items-center justify-center">
-              <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+            <div className="h-16 w-16 rounded-full bg-accent/30 flex items-center justify-center">
+              <CheckCircle2 className="h-8 w-8 text-primary" />
             </div>
             <div>
               <p className="font-semibold text-foreground">Check your inbox</p>
@@ -355,11 +355,11 @@ function TrialModal({
                 Your {planName} trial starts immediately.
               </p>
             </div>
-            <div className="flex items-center gap-2 text-[11px] text-teal-700 bg-teal-50 border border-teal-100 rounded-lg px-3 py-2 w-full justify-center">
+            <div className="flex items-center gap-2 text-[11px] text-primary rounded-xl bg-accent/40 px-3 py-2.5 w-full justify-center">
               <Check className="h-3.5 w-3.5" />
               14-day full access · No billing until trial ends
             </div>
-            <Button onClick={onClose} className="w-full bg-teal-600 hover:bg-teal-700 text-white mt-1">
+            <Button onClick={onClose} className="w-full mt-1">
               Done
             </Button>
           </div>
@@ -394,7 +394,7 @@ function TrialModal({
               <button
                 type="submit"
                 disabled={loading || !name || !email || !clinic || !specialty}
-                className="w-full h-10 mt-1 rounded-lg bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white font-medium text-sm transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full h-11 mt-1 rounded-xl bg-gradient-brand hover:shadow-lg hover:shadow-teal-500/30 disabled:opacity-50 text-primary-foreground font-semibold text-sm shadow-md shadow-teal-500/20 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
               >
                 {loading ? (
                   <><Loader2 className="h-4 w-4 animate-spin" /> Activating trial…</>
@@ -473,7 +473,7 @@ function SalesModal({
 
   return (
     <Modal onClose={onClose}>
-      <Card className="p-6 shadow-2xl shadow-black/20 border-border/60 max-h-[90vh] overflow-y-auto">
+      <Card className="p-6 border-border max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
@@ -497,8 +497,8 @@ function SalesModal({
         {/* Success state */}
         {submitted ? (
           <div className="flex flex-col items-center py-6 gap-4 text-center animate-fade-scale-in">
-            <div className="h-16 w-16 rounded-full bg-teal-50 flex items-center justify-center">
-              <CheckCircle2 className="h-8 w-8 text-teal-500" />
+            <div className="h-16 w-16 rounded-full bg-accent/40 flex items-center justify-center">
+              <CheckCircle2 className="h-8 w-8 text-primary" />
             </div>
             <div>
               <p className="font-semibold text-foreground">We&apos;ll be in touch shortly</p>
@@ -508,19 +508,19 @@ function SalesModal({
                 within 4 hours to discuss {planName}.
               </p>
             </div>
-            <div className="flex items-center gap-2 text-[11px] text-teal-700 bg-teal-50 border border-teal-100 rounded-lg px-3 py-2 w-full justify-center">
+            <div className="flex items-center gap-2 text-[11px] text-primary rounded-xl bg-accent/40 px-3 py-2.5 w-full justify-center">
               <Check className="h-3.5 w-3.5" />
               Average response time: under 4 hours
             </div>
-            <Button onClick={onClose} className="w-full bg-teal-600 hover:bg-teal-700 text-white mt-1">
+            <Button onClick={onClose} className="w-full mt-1">
               Done
             </Button>
           </div>
         ) : (
           <>
             {/* Plan context */}
-            <div className="flex items-center gap-2 bg-muted/50 border border-border/60 rounded-xl px-4 py-2.5 mb-5">
-              <div className="h-2 w-2 rounded-full bg-teal-500" />
+            <div className="flex items-center gap-2 rounded-xl bg-muted/50 px-4 py-2.5 mb-5">
+              <div className="h-2 w-2 rounded-full bg-primary" />
               <p className="text-sm text-foreground/80">
                 Enquiring about <span className="font-semibold">{planName}</span>
               </p>
@@ -566,14 +566,14 @@ function SalesModal({
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Tell us about your clinic setup, integrations you need, or any questions…"
                   rows={3}
-                  className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all resize-none"
+                  className="w-full px-3 py-2.5 rounded-xl border border-input bg-background text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading || !canSubmit}
-                className="w-full h-10 mt-1 rounded-lg bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white font-medium text-sm transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full h-11 mt-1 rounded-xl bg-gradient-brand hover:shadow-lg hover:shadow-teal-500/30 disabled:opacity-50 text-primary-foreground font-semibold text-sm shadow-md shadow-teal-500/20 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
               >
                 {loading ? (
                   <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>
@@ -641,7 +641,7 @@ export function PricingPage({ onBack }: PricingPageProps) {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
 
           {/* Region selector */}
-          <div className="flex items-center p-1 bg-muted rounded-xl gap-1">
+          <div className="flex items-center p-1 rounded-full bg-muted gap-1">
             {([
               { id: "india",         icon: MapPin, label: "India",         sym: "₹" },
               { id: "international", icon: Globe,  label: "International", sym: "$" },
@@ -649,21 +649,21 @@ export function PricingPage({ onBack }: PricingPageProps) {
               <button
                 key={id}
                 onClick={() => setRegion(id)}
-                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer ${
                   region === id
-                    ? "bg-white shadow-sm text-foreground"
+                    ? "bg-gradient-brand text-primary-foreground shadow-sm shadow-teal-500/25"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <Icon className="h-3.5 w-3.5" />
                 {label}
-                <span className="text-muted-foreground font-normal">{sym}</span>
+                <span className={region === id ? "font-normal opacity-80" : "text-muted-foreground font-normal"}>{sym}</span>
               </button>
             ))}
           </div>
 
           {/* Billing period selector */}
-          <div className="flex items-center p-1 bg-muted rounded-xl gap-1">
+          <div className="flex items-center p-1 rounded-full bg-muted gap-1">
             {(["monthly", "quarterly", "halfyearly", "yearly"] as Period[]).map((p) => {
               const disc   = DISCOUNT[p];
               const active = period === p;
@@ -671,18 +671,18 @@ export function PricingPage({ onBack }: PricingPageProps) {
                 <button
                   key={p}
                   onClick={() => setPeriod(p)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer whitespace-nowrap ${
                     active
-                      ? "bg-white shadow-sm text-foreground"
+                      ? "bg-gradient-brand text-primary-foreground shadow-sm shadow-teal-500/25"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {PERIOD_LABEL[p]}
                   {disc > 0 && (
-                    <span className={`text-[10px] font-semibold rounded-full px-1.5 py-0.5 ${
+                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
                       active
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-emerald-50 text-emerald-600"
+                        ? "bg-white/20 text-primary-foreground"
+                        : "bg-primary/10 text-primary"
                     }`}>
                       -{disc}%
                     </span>
@@ -710,7 +710,7 @@ export function PricingPage({ onBack }: PricingPageProps) {
                 {/* Badge slot — in-flow, fixes overlap */}
                 <div className="h-6 flex items-center justify-center mb-3">
                   {tier.badge && (
-                    <span className="inline-flex items-center text-[10px] font-semibold bg-teal-600 text-white rounded-full px-3 py-0.5 tracking-wide">
+                    <span className="inline-flex items-center text-[10px] font-semibold rounded-full bg-gradient-brand text-primary-foreground px-3 py-1 tracking-wide shadow-sm shadow-teal-500/25">
                       {tier.badge}
                     </span>
                   )}
@@ -736,7 +736,7 @@ export function PricingPage({ onBack }: PricingPageProps) {
                       <span className="text-xs text-muted-foreground">{tier.period}</span>
                     )}
                     {!isCustom && savings > 0 && (
-                      <span className="inline-flex items-center text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5 ml-auto">
+                      <span className="inline-flex items-center text-[10px] font-semibold text-primary bg-accent rounded-full px-2 py-0.5 ml-auto">
                         Save {savings}%
                       </span>
                     )}
@@ -755,7 +755,7 @@ export function PricingPage({ onBack }: PricingPageProps) {
                 <ul className="space-y-2 mb-6 flex-1">
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-start gap-2 text-[13px] text-foreground/80">
-                      <Check className={`h-3.5 w-3.5 mt-0.5 shrink-0 ${tier.highlight ? "text-teal-600" : "text-primary"}`} />
+                      <Check className={`h-3.5 w-3.5 mt-0.5 shrink-0 ${tier.highlight ? "text-primary" : "text-primary"}`} />
                       {f}
                     </li>
                   ))}
@@ -764,10 +764,10 @@ export function PricingPage({ onBack }: PricingPageProps) {
                 {/* CTA button — wired up */}
                 <button
                   onClick={() => setActiveModal({ kind: tier.cta, tier })}
-                  className={`w-full h-10 rounded-lg font-medium text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] ${
+                  className={`w-full h-11 rounded-xl text-sm font-semibold transition-all duration-300 cursor-pointer ${
                     tier.highlight
-                      ? "bg-teal-600 hover:bg-teal-700 text-white shadow-sm"
-                      : "border border-border hover:bg-muted/60 text-foreground"
+                      ? "bg-gradient-brand hover:shadow-lg hover:shadow-teal-500/30 text-primary-foreground shadow-md shadow-teal-500/20"
+                      : "bg-muted/70 hover:bg-muted text-foreground"
                   }`}
                 >
                   {tier.cta === "trial" ? "Start Free Trial" : "Contact Sales"}
@@ -778,10 +778,10 @@ export function PricingPage({ onBack }: PricingPageProps) {
         </div>
 
         {/* ── Comparison callout ── */}
-        <Card className="p-7 bg-muted/30 border-dashed">
+        <Card className="p-7 bg-muted/30">
           <div className="flex items-start gap-4">
-            <div className="h-10 w-10 rounded-xl bg-teal-500/10 flex items-center justify-center shrink-0">
-              <Sparkles className="h-5 w-5 text-teal-600" />
+            <div className="h-11 w-11 rounded-xl bg-accent flex items-center justify-center shrink-0">
+              <Sparkles className="h-5 w-5 text-primary" />
             </div>
             <div>
               <h3 className="text-sm font-semibold mb-1">

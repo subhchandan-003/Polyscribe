@@ -39,13 +39,13 @@ export function ImpactStats() {
     <div className="flex items-center gap-5 flex-wrap">
       {ITEMS.map(({ key, icon: Icon, label, format }, i) => (
         <div key={key} className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <Icon className="h-3.5 w-3.5" />
+          <div className="flex items-center gap-2.5">
+            <div className="h-9 w-9 rounded-xl bg-accent text-primary flex items-center justify-center shrink-0">
+              <Icon className="h-4 w-4" />
             </div>
             <div>
               <p className="font-heading text-sm font-bold leading-none">{format(stats)}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
+              <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-wide font-medium">{label}</p>
             </div>
           </div>
           {i < ITEMS.length - 1 && <div className="h-8 w-px bg-border/60" />}

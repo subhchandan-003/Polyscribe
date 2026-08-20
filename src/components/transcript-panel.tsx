@@ -16,8 +16,8 @@ export function TranscriptPanel({ transcript, isLoading }: TranscriptPanelProps)
       <div className="h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center gap-2 mb-5">
-          <div className="h-1 w-4 rounded-full bg-primary/40" />
-          <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+          <div className="h-2 w-2 rounded-full bg-primary" />
+          <h2 className="text-sm font-bold text-foreground">
             Transcript
           </h2>
         </div>
@@ -25,7 +25,7 @@ export function TranscriptPanel({ transcript, isLoading }: TranscriptPanelProps)
         {/* Skeleton lines */}
         <div className="flex-1 space-y-3">
           {SKELETON_WIDTHS.map((w, i) => (
-            <div key={i} className="h-3.5 bg-muted rounded animate-pulse" style={{ width: w }} />
+            <div key={i} className="relative h-3.5 rounded-full bg-muted overflow-hidden animate-shimmer" style={{ width: w }} />
           ))}
         </div>
 
@@ -52,25 +52,25 @@ export function TranscriptPanel({ transcript, isLoading }: TranscriptPanelProps)
     <div className="h-full flex flex-col">
       {/* Panel header */}
       <div className="flex items-center gap-2 mb-4">
-        <div className="h-1 w-4 rounded-full bg-primary/50" />
-        <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+        <div className="h-2 w-2 rounded-full bg-primary" />
+        <h2 className="text-sm font-bold text-foreground">
           Transcript
         </h2>
       </div>
 
       <ScrollArea className="flex-1 -mr-4 pr-4">
-        <div className="space-y-2">
+        <div className="space-y-3">
           {lines.map((line, i) => {
             const doctorMatch = line.match(/^(Doctor):(.*)$/i);
             const patientMatch = line.match(/^(Patient):(.*)$/i);
 
             if (doctorMatch) {
               return (
-                <div key={i} className="flex gap-2">
-                  <span className="shrink-0 text-[10px] font-bold text-teal-700 bg-teal-50 border border-teal-100 rounded px-1.5 py-0.5 h-fit mt-0.5 font-mono uppercase tracking-wide">
+                <div key={i} className="flex gap-2.5">
+                  <span className="shrink-0 text-[10px] font-bold text-primary-foreground bg-gradient-brand rounded-full px-2.5 py-1 h-fit mt-0.5">
                     Dr
                   </span>
-                  <p className="text-sm leading-relaxed text-foreground/85 font-mono">
+                  <p className="text-sm leading-relaxed text-foreground/85 pt-0.5">
                     {doctorMatch[2].trim()}
                   </p>
                 </div>
@@ -79,11 +79,11 @@ export function TranscriptPanel({ transcript, isLoading }: TranscriptPanelProps)
 
             if (patientMatch) {
               return (
-                <div key={i} className="flex gap-2">
-                  <span className="shrink-0 text-[10px] font-bold text-violet-700 bg-violet-50 border border-violet-100 rounded px-1.5 py-0.5 h-fit mt-0.5 font-mono uppercase tracking-wide">
+                <div key={i} className="flex gap-2.5">
+                  <span className="shrink-0 text-[10px] font-bold text-secondary-foreground bg-secondary rounded-full px-2.5 py-1 h-fit mt-0.5">
                     Pt
                   </span>
-                  <p className="text-sm leading-relaxed text-foreground/85 font-mono">
+                  <p className="text-sm leading-relaxed text-foreground/85 pt-0.5">
                     {patientMatch[2].trim()}
                   </p>
                 </div>
@@ -94,7 +94,7 @@ export function TranscriptPanel({ transcript, isLoading }: TranscriptPanelProps)
             if (!line.trim()) return <div key={i} className="h-2" />;
 
             return (
-              <p key={i} className="text-xs text-muted-foreground/70 italic font-mono">
+              <p key={i} className="text-xs text-muted-foreground/70 italic">
                 {line}
               </p>
             );

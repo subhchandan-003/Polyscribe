@@ -4,7 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { LoginPage } from "@/components/login-page";
 import { PatientDashboard } from "@/components/patient-dashboard";
-import { Sidebar, type NavKey } from "@/components/sidebar";
+import { CommandBar, type NavKey } from "@/components/command-bar";
 import { Recorder } from "@/components/recorder";
 import { TranscriptPanel } from "@/components/transcript-panel";
 import { SOAPPanel } from "@/components/soap-panel";
@@ -171,7 +171,7 @@ export default function Home() {
               ? "demo"
               : "console";
 
-  const handleSidebarNav = (key: NavKey) => {
+  const handleNav = (key: NavKey) => {
     switch (key) {
       case "console":
         setPage("home");
@@ -231,16 +231,13 @@ export default function Home() {
     return <PatientDashboard />;
   }
 
-  // Doctor portal → persistent sidebar shell + full-width console
+  // Doctor portal → command bar shell + full-width console
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      <Sidebar
-        active={activeNav}
-        onNavigate={handleSidebarNav}
-        onNewConsultation={handleNewSession}
-      />
+    <div className="flex flex-col h-screen overflow-hidden relative">
+      <div className="gradient-mesh" />
+      <CommandBar active={activeNav} onNavigate={handleNav} onNewConsultation={handleNewSession} />
 
-      <div className="flex-1 flex flex-col overflow-y-auto pb-24 lg:pb-0">
+      <div className="flex-1 overflow-y-auto">
         {/* Business layer pages */}
         {page === "pricing" && (
           <div className="max-w-6xl mx-auto w-full px-6 lg:px-10 py-8">
@@ -284,18 +281,21 @@ export default function Home() {
 
             {/* Recording / Idle State — recorder is the hero; setup lives beside it, never above it */}
             {(appState === "idle" || appState === "recording") && (
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start animate-fade-in-up">
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 items-start animate-fade-in-up">
                 {/* Main column */}
-                <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-7 lg:pt-6">
+                <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-7 lg:pt-4">
                   <div>
-                    <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-teal-600/70 bg-teal-50 border border-teal-100 rounded-full px-3 py-1 mb-3 whitespace-nowrap">
-                      <span className="h-1.5 w-1.5 rounded-full bg-teal-500 shrink-0" />
+                    <div className="inline-flex items-center gap-2 text-xs font-semibold text-primary rounded-full bg-accent px-3 py-1.5 mb-4 whitespace-nowrap">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+                      </span>
                       New Consultation
                     </div>
-                    <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground mb-2">
-                      Start Recording
+                    <h2 className="font-heading text-4xl font-bold tracking-tight text-foreground mb-3">
+                      Start <span className="text-gradient-brand">Recording</span>
                     </h2>
-                    <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
+                    <p className="text-muted-foreground text-base max-w-md leading-relaxed">
                       Record your patient conversation — PolyScribe handles transcription,
                       diarization, and SOAP structuring automatically.
                     </p>
@@ -317,15 +317,17 @@ export default function Home() {
                 </div>
 
                 {/* Side panel — Specialty + Language, beside the recorder */}
-                <aside className="w-full lg:sticky lg:top-8">
-                  <Card className="p-5">
-                    <div className="flex items-center gap-2 mb-4">
-                      <SlidersHorizontal className="h-4 w-4 text-teal-600" />
-                      <h3 className="font-heading text-sm font-semibold">Consultation Setup</h3>
+                <aside className="w-full lg:sticky lg:top-20">
+                  <Card className="p-6">
+                    <div className="flex items-center gap-2.5 mb-5">
+                      <div className="h-8 w-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
+                        <SlidersHorizontal className="h-4 w-4 text-primary" />
+                      </div>
+                      <h3 className="font-heading text-sm font-bold">Consultation Setup</h3>
                     </div>
                     <div className="space-y-5">
                       <SpecialtySelector value={specialty} onChange={setSpecialty} />
-                      <Separator />
+                      <Separator className="bg-border/60" />
                       <LanguageSelector config={langConfig} onChange={setLangConfig} />
                     </div>
                   </Card>
@@ -344,25 +346,24 @@ export default function Home() {
             {(showResults || (appState === "transcribing" && transcript)) && (
               <div className="space-y-5 animate-fade-in-up">
                 {/* Results header bar */}
-                <div className="flex items-center justify-between pb-3 border-b border-border/60">
+                <div className="flex items-center justify-between pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="h-1 w-5 rounded-full bg-teal-500/60" />
-                    <h2 className="font-heading text-base font-bold tracking-tight">
+                    <h2 className="font-heading text-xl font-bold tracking-tight">
                       Consultation Notes
                     </h2>
                     {saved && (
-                      <span className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-full px-2.5 py-0.5">
+                      <span className="flex items-center gap-1.5 text-xs font-semibold text-primary rounded-full bg-accent px-2.5 py-1">
                         <CheckCircle2 className="h-3 w-3" />
                         Auto-saved
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-2">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setAppState("history")}
-                      className="gap-1.5 text-muted-foreground hover:text-foreground h-7 text-xs"
+                      className="gap-1.5 text-muted-foreground hover:text-foreground h-8 text-xs rounded-xl"
                     >
                       <History className="h-3.5 w-3.5" />
                       History
@@ -371,7 +372,7 @@ export default function Home() {
                       variant="outline"
                       size="sm"
                       onClick={handleNewSession}
-                      className="gap-1.5 h-7 text-xs border-teal-200 text-teal-700 hover:bg-teal-50/60"
+                      className="gap-1.5 h-8 text-xs rounded-xl"
                     >
                       <RotateCcw className="h-3 w-3" />
                       New Session
@@ -380,13 +381,13 @@ export default function Home() {
                 </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 min-h-[60vh]">
-                  <Card className="p-6 overflow-hidden border-border/60 shadow-sm">
+                  <Card className="p-6 overflow-hidden">
                     <TranscriptPanel
                       transcript={transcript}
                       isLoading={appState === "transcribing"}
                     />
                   </Card>
-                  <Card className="p-6 overflow-hidden border-border/60 shadow-sm">
+                  <Card className="p-6 overflow-hidden">
                     <SOAPPanel
                       soapNote={soapNote}
                       isLoading={appState === "structuring"}
@@ -405,7 +406,7 @@ export default function Home() {
                   </h2>
                   <p className="text-sm text-muted-foreground max-w-md">{error}</p>
                 </div>
-                <Button onClick={handleNewSession} variant="outline" className="gap-2 border-teal-200 text-teal-700 hover:bg-teal-50/60">
+                <Button onClick={handleNewSession} variant="outline" className="gap-2 rounded-xl">
                   <RotateCcw className="h-4 w-4" />
                   Try Again
                 </Button>

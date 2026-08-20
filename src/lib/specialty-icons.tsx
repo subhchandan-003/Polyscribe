@@ -9,13 +9,12 @@ export const SPECIALTY_ICONS: Record<Specialty, LucideIcon> = {
   dermatology: Microscope,
 };
 
-/** Distinct accent per specialty for circular category badges — bg for the
- * badge fill, text for the icon/label color. Reused wherever a specialty
- * needs a colorful, at-a-glance identity (selector, cards, breakdown). */
+/** Each specialty gets its own warm accent so the console feels alive,
+ * while staying inside the blue-green brand family. */
 export const SPECIALTY_COLORS: Record<Specialty, { bg: string; text: string; ring: string }> = {
-  general: { bg: "bg-sky-100", text: "text-sky-600", ring: "ring-sky-200" },
-  cardiology: { bg: "bg-rose-100", text: "text-rose-600", ring: "ring-rose-200" },
-  pediatrics: { bg: "bg-amber-100", text: "text-amber-600", ring: "ring-amber-200" },
-  ent: { bg: "bg-violet-100", text: "text-violet-600", ring: "ring-violet-200" },
-  dermatology: { bg: "bg-emerald-100", text: "text-emerald-600", ring: "ring-emerald-200" },
+  general: { bg: "bg-teal-50", text: "text-teal-600", ring: "ring-teal-400/40" },
+  cardiology: { bg: "bg-rose-50", text: "text-rose-500", ring: "ring-rose-400/40" },
+  pediatrics: { bg: "bg-amber-50", text: "text-amber-500", ring: "ring-amber-400/40" },
+  ent: { bg: "bg-sky-50", text: "text-sky-500", ring: "ring-sky-400/40" },
+  dermatology: { bg: "bg-violet-50", text: "text-violet-500", ring: "ring-violet-400/40" },
 };
