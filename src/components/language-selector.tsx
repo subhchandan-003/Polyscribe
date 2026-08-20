@@ -1,34 +1,50 @@
 "use client";
 
 import { useState } from "react";
-import { X, Globe, Check } from "lucide-react";
+import { Globe, Check, Languages } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export interface LanguageConfig {
   inputLanguages: string[];
   outputLanguage: string;
 }
 
+/** All 22 languages in the Eighth Schedule of the Indian Constitution, plus English. */
 const LANGUAGES = [
-  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "en", label: "English", flag: "🇮🇳" },
   { code: "hi", label: "Hindi", flag: "🇮🇳" },
-  { code: "ta", label: "Tamil", flag: "🇮🇳" },
-  { code: "zh", label: "Mandarin", flag: "🇨🇳" },
-  { code: "ms", label: "Malay", flag: "🇲🇾" },
-  { code: "ar", label: "Arabic", flag: "🇸🇦" },
+  { code: "bn", label: "Bengali", flag: "🇮🇳" },
   { code: "mr", label: "Marathi", flag: "🇮🇳" },
   { code: "te", label: "Telugu", flag: "🇮🇳" },
+  { code: "ta", label: "Tamil", flag: "🇮🇳" },
+  { code: "gu", label: "Gujarati", flag: "🇮🇳" },
+  { code: "ur", label: "Urdu", flag: "🇮🇳" },
   { code: "kn", label: "Kannada", flag: "🇮🇳" },
-  { code: "bn", label: "Bengali", flag: "🇮🇳" },
+  { code: "ml", label: "Malayalam", flag: "🇮🇳" },
+  { code: "or", label: "Odia", flag: "🇮🇳" },
+  { code: "pa", label: "Punjabi", flag: "🇮🇳" },
+  { code: "as", label: "Assamese", flag: "🇮🇳" },
+  { code: "mai", label: "Maithili", flag: "🇮🇳" },
+  { code: "sat", label: "Santali", flag: "🇮🇳" },
+  { code: "ks", label: "Kashmiri", flag: "🇮🇳" },
+  { code: "ne", label: "Nepali", flag: "🇮🇳" },
+  { code: "sd", label: "Sindhi", flag: "🇮🇳" },
+  { code: "kok", label: "Konkani", flag: "🇮🇳" },
+  { code: "doi", label: "Dogri", flag: "🇮🇳" },
+  { code: "mni", label: "Manipuri", flag: "🇮🇳" },
+  { code: "brx", label: "Bodo", flag: "🇮🇳" },
+  { code: "sa", label: "Sanskrit", flag: "🇮🇳" },
 ];
 
 const OUTPUT_OPTIONS = [
   { code: "auto", label: "Same as source" },
-  { code: "en", label: "English" },
-  { code: "hi", label: "Hindi" },
-  { code: "ta", label: "Tamil" },
-  { code: "zh", label: "Mandarin" },
-  { code: "ms", label: "Malay" },
-  { code: "ar", label: "Arabic" },
+  ...LANGUAGES,
 ];
 
 interface LanguageSelectorProps {
@@ -47,46 +63,43 @@ export function LanguageSelector({ config, onChange }: LanguageSelectorProps) {
     onChange({ ...config, inputLanguages: updated });
   };
 
-  const displayedLanguages = showAll ? LANGUAGES : LANGUAGES.slice(0, 5);
+  const displayedLanguages = showAll ? LANGUAGES : LANGUAGES.slice(0, 8);
 
   return (
-    <div className="w-full max-w-lg space-y-4">
+    <div className="w-full space-y-4">
       {/* Input languages */}
       <div>
-        <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mb-2.5">
+        <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mb-2">
           <Globe className="h-3.5 w-3.5" />
           Consultation Languages
         </label>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {displayedLanguages.map((lang) => {
             const isSelected = config.inputLanguages.includes(lang.code);
             return (
               <button
                 key={lang.code}
                 onClick={() => toggleLanguage(lang.code)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
                   isSelected
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
               >
-                <span className="text-base leading-none">{lang.flag}</span>
                 {lang.label}
                 {isSelected && <Check className="h-3 w-3 ml-0.5" />}
               </button>
             );
           })}
-          {!showAll && (
-            <button
-              onClick={() => setShowAll(true)}
-              className="px-3 py-1.5 rounded-full text-sm text-muted-foreground hover:text-foreground bg-muted/40 hover:bg-muted transition-colors"
-            >
-              +{LANGUAGES.length - 5} more
-            </button>
-          )}
+          <button
+            onClick={() => setShowAll((v) => !v)}
+            className="px-2.5 py-1 rounded-full text-xs text-muted-foreground hover:text-foreground bg-muted/40 hover:bg-muted transition-colors"
+          >
+            {showAll ? "Show less" : `+${LANGUAGES.length - 8} more`}
+          </button>
         </div>
         {config.inputLanguages.length === 0 && (
-          <p className="text-xs text-muted-foreground mt-2">
+          <p className="text-[11px] text-muted-foreground mt-2">
             Select expected languages, or leave empty for auto-detection
           </p>
         )}
@@ -94,27 +107,27 @@ export function LanguageSelector({ config, onChange }: LanguageSelectorProps) {
 
       {/* Output language */}
       <div>
-        <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2.5 block">
+        <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <Languages className="h-3.5 w-3.5" />
           Output Note Language
         </label>
-        <div className="flex flex-wrap gap-2">
-          {OUTPUT_OPTIONS.map((opt) => {
-            const isSelected = config.outputLanguage === opt.code;
-            return (
-              <button
-                key={opt.code}
-                onClick={() => onChange({ ...config, outputLanguage: opt.code })}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  isSelected
-                    ? "bg-primary/15 text-primary ring-1 ring-primary/30"
-                    : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
+        <Select
+          value={config.outputLanguage}
+          onValueChange={(value) => {
+            if (value) onChange({ ...config, outputLanguage: value });
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {OUTPUT_OPTIONS.map((opt) => (
+              <SelectItem key={opt.code} value={opt.code}>
                 {opt.label}
-              </button>
-            );
-          })}
-        </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );

@@ -7,14 +7,27 @@ const anthropic = new Anthropic({
 const LANGUAGE_MAP: Record<string, string> = {
   en: "English",
   hi: "Hindi",
-  ta: "Tamil",
-  zh: "Mandarin Chinese",
-  ms: "Malay",
-  ar: "Arabic",
+  bn: "Bengali",
   mr: "Marathi",
   te: "Telugu",
+  ta: "Tamil",
+  gu: "Gujarati",
+  ur: "Urdu",
   kn: "Kannada",
-  bn: "Bengali",
+  ml: "Malayalam",
+  or: "Odia",
+  pa: "Punjabi",
+  as: "Assamese",
+  mai: "Maithili",
+  sat: "Santali",
+  ks: "Kashmiri",
+  ne: "Nepali",
+  sd: "Sindhi",
+  kok: "Konkani",
+  doi: "Dogri",
+  mni: "Manipuri",
+  brx: "Bodo",
+  sa: "Sanskrit",
 };
 
 export async function cleanupTranscript(
@@ -54,12 +67,9 @@ MULTILINGUAL RULES:
 - Detect and note ALL languages at the very first line as: [Language: detected language(s)]
 - Preserve EVERY language exactly as spoken — do NOT translate anything
 - If code-switching occurs (e.g., "Your BP is high, take this dawai morning and night, theek hai?"), preserve the exact mix
-- For Hindi/Tamil/Mandarin words captured in romanized form by speech recognition, keep them romanized
+- For Indian-language words captured in romanized form by speech recognition (e.g. Hindi "dawai", Tamil "marunthu"), keep them romanized rather than transliterating into native script
 - For medical terms spoken in English within a non-English conversation, keep them in English
-- Recognize language-specific medical vocabulary:
-  * Hindi: dawai (medicine), bukhar (fever), dard (pain), pet (stomach), sir (head), khoon (blood)
-  * Tamil: marunthu (medicine), kaichal (fever), vali (pain), vayiru (stomach)
-  * Mandarin: yào (药, medicine), fāshāo (发烧, fever), tòng (痛, pain)
+- Recognize common colloquial medical vocabulary across Indian languages — e.g. Hindi: dawai (medicine), bukhar (fever), dard (pain), pet (stomach); Tamil: marunthu (medicine), kaichal (fever), vali (pain); Bengali: oshudh (medicine), jor (fever); Telugu: mandu (medicine), jwaram (fever) — and apply the same recognition principle to any other Indian language spoken in the consultation
 
 TRANSCRIPT CLEANUP RULES:
 - Fix grammar, punctuation, and sentence structure while preserving the original language

@@ -20,7 +20,7 @@ export const DEMO_CASES: DemoCase[] = [
     language: "English",
     languageCode: "en",
     specialty: "cardiology",
-    flag: "🇬🇧",
+    flag: "🇮🇳",
     duration: "~4 min consultation",
     description:
       "A 58-year-old male presents with exertional chest pain radiating to the left arm. History of hypertension and smoking.",
@@ -109,49 +109,49 @@ Patient: Dhanyavaad Doctor.
 Doctor: Jaldi theek hoiye. Apna khayal rakhiye.`,
   },
   {
-    id: "ms-pediatrics",
-    title: "Demam Anak — Child Fever",
-    language: "Malay",
-    languageCode: "ms",
+    id: "ta-pediatrics",
+    title: "குழந்தைக்கு காய்ச்சல் — Child Fever",
+    language: "Tamil",
+    languageCode: "ta",
     specialty: "pediatrics",
-    flag: "🇲🇾",
+    flag: "🇮🇳",
     duration: "~3 min consultation",
     description:
-      "A mother brings her 4-year-old son with high fever and rash for 2 days. Malay consultation typical of a Malaysian clinic.",
-    rawTranscript: `Doctor: Selamat pagi Puan. Sila duduk. Ini anak puan ya? Apa masalahnya?
+      "A mother brings her 4-year-old son with high fever and a body rash for 2 days. Tamil-medium consultation typical of a Chennai clinic, with English medical terms code-switched in.",
+    rawTranscript: `Doctor: Vanakkam Amma, ukkarunga. Idhu ungal paiyana? Enna problem?
 
-Patient: Selamat pagi Doktor. Anak saya Ahmad, dia empat tahun. Dua hari demam tinggi dan keluar ruam merah di badan.
+Patient: Vanakkam Doctor. En magan peru Arun, avanukku naalu vayasu. Rendu naal ah high fever irukku, mattum body la red rash vandhurukku.
 
-Doctor: Demam berapa ya? Ada check?
+Doctor: Fever eppadi irukku? Thermometer la check panninga?
 
-Patient: Semalam 39.5 darjah. Hari ni pun masih panas. Dia tak mahu makan, cuma minum air sikit-sikit.
+Patient: Neththu 103 degree irundhuchu. Innaiku kammiya irukku aana innum sudu dhaan. Sapada mattaan, thanni mattum konjam konjam kudikaraan.
 
-Doctor: Ruam tu macam mana? Ada gatal tak?
+Doctor: Andha rash eppadi irukku? Itching irukka?
 
-Patient: Ruam merah-merah macam bintik, mula kat muka lepas tu turun ke badan dan tangan. Dia tak garu sangat.
+Patient: Chinna chinna red spots maadhiri, mudhalla mugathula start aayiduchu apparam body kum kaikkum spread aachu. Adhigama sorandhu kaamittu illa.
 
-Doctor: Ada batuk, selesema, atau mata merah?
+Doctor: Irumal, jaladhosham, kann sivandhu irukka?
 
-Patient: Mata dia merah sikit dan berair. Hidung pun meleleh. Batuk sikit-sikit ada.
+Patient: Kannu konjam sivappa irukku, thanni vidudhu. Mookilirundhum thanni varudhu. Konjam irumal um irukku.
 
-Doctor: Dia dah ambil vaksin lengkap tak?
+Doctor: Vaccination full ah eduthirukeengala?
 
-Patient: Sebenarnya Doktor, saya ada miss satu appointment dulu masa dia dua tahun. Saya tak pasti dia dapat semua vaksin.
+Patient: Actually Doctor, avanukku rendu vayasula oru appointment miss pannitten. Ella vaccine um kedaichuchaanu therla.
 
-Doctor: OK, saya nak check dia ya. Ahmad, Uncle Doktor nak tengok sikit ya... Baik. Temperature sekarang 39.2. Ada conjunctivitis bilateral. Koplik spots kat dalam mulut. Ruam maculopapular dah spread ke trunk dan arms. Throat merah. Lungs clear.
+Doctor: Sari, naan avana check pannaren. Arun, kunju... naan konjam paakaren aa... Sari. Temperature ippo 102.6 irukku. Rendu kannilayum conjunctivitis irukku. Vaaikkulla Koplik spots irukku. Rash trunk-um kaikkum spread aayirukku. Throat red-a irukku. Lungs clear.
 
-Doctor: Puan, based on findings ni — demam tinggi, mata merah, Koplik spots, dan ruam yang spread dari muka ke bawah — saya suspect ini measles. Campak.
+Doctor: Amma, indha findings vachu paathaa — high fever, red eyes, Koplik spots, mattum mugathula irundhu keela spread aana rash — measles-a irukalaam nu doubt.
 
-Patient: Ya Allah, campak ke Doktor? Bahaya tak?
+Patient: Aiyayo, measles-a Doctor? Danger-a irukkaa?
 
-Doctor: Kita kena monitor closely. Saya nak buat blood test untuk confirm dan check complications. Buat masa ni, saya bagi paracetamol untuk demam — bagi ikut berat badan dia. Vitamin A supplement penting untuk measles. Pastikan dia minum air banyak. Dia kena isolate dari budak-budak lain ya, campak sangat mudah berjangkit.
+Doctor: Naanga closely monitor pannanum. Confirm pannaradhukku blood test edukaren, complications um check pannaren. Ippo paracetamol kudukaren fever-ukku — weight vachu dose calculate pannuven. Vitamin A supplement measles-ku romba mukkiyam. Adhigama thanni kudikkanum. Vera pasangalodu vidama isolate pannunga, measles romba fast-a spread aagum.
 
-Patient: Bila saya kena datang balik?
+Patient: Naan eppo thirumba varanum?
 
-Doctor: Kalau demam naik lagi, ada sesak nafas, atau dia jadi sangat lemah, bawa terus ke emergency. Kalau stabil, datang jumpa saya dalam dua hari untuk follow-up. Saya akan report kes ni ke KKM sebab measles kena notify.
+Doctor: Fever innum kooda vandha, breathing problem irundha, illa romba weak ah aanaalum udane emergency-kku poidunga. Stable-a irundha, rendu naal kalichu follow-up-ku vaanga. Ithu notifiable disease nu report pannuven.
 
-Patient: Terima kasih banyak Doktor.
+Patient: Nandri Doctor.
 
-Doctor: Sama-sama. Jaga Ahmad baik-baik ya.`,
+Doctor: Paravalla. Arun-a nalla paathukonga.`,
   },
 ];
