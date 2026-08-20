@@ -6,7 +6,6 @@ export interface DemoCase {
   language: string;
   languageCode: string;
   specialty: Specialty;
-  flag: string;
   duration: string;
   description: string;
   /** Pre-written raw transcript (as if captured by Web Speech API) */
@@ -20,7 +19,6 @@ export const DEMO_CASES: DemoCase[] = [
     language: "English",
     languageCode: "en",
     specialty: "cardiology",
-    flag: "🇮🇳",
     duration: "~4 min consultation",
     description:
       "A 58-year-old male presents with exertional chest pain radiating to the left arm. History of hypertension and smoking.",
@@ -68,7 +66,6 @@ Doctor: Take care Mr. Sharma. My assistant will help you schedule everything.`,
     language: "Hindi",
     languageCode: "hi",
     specialty: "general",
-    flag: "🇮🇳",
     duration: "~3 min consultation",
     description:
       "A 35-year-old woman presents with fever, cough, and body pain for 5 days. Hindi-medium consultation with code-switching.",
@@ -114,7 +111,6 @@ Doctor: Jaldi theek hoiye. Apna khayal rakhiye.`,
     language: "Tamil",
     languageCode: "ta",
     specialty: "pediatrics",
-    flag: "🇮🇳",
     duration: "~3 min consultation",
     description:
       "A mother brings her 4-year-old son with high fever and a body rash for 2 days. Tamil-medium consultation typical of a Chennai clinic, with English medical terms code-switched in.",

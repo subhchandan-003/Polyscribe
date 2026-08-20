@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ShieldCheck, AlertTriangle } from "lucide-react";
+import { ShieldCheck, AlertTriangle, Landmark, Lock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -19,7 +19,7 @@ export function ConsentGate({ onConsent }: ConsentGateProps) {
           <ShieldCheck className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold">Patient Consent Required</h3>
+          <h3 className="font-heading text-sm font-semibold">Patient Consent Required</h3>
           <p className="text-[11px] text-muted-foreground">
             Before starting the recording
           </p>
@@ -51,14 +51,13 @@ export function ConsentGate({ onConsent }: ConsentGateProps) {
 
       {/* Compliance badges */}
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-muted text-[10px] font-medium text-muted-foreground">
-          🇮🇳 DPDP Act 2023
+        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-muted text-[10px] font-medium text-muted-foreground">
+          <Landmark className="h-3 w-3" />
+          DPDP Act 2023
         </span>
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-muted text-[10px] font-medium text-muted-foreground">
-          🇸🇬 PDPA
-        </span>
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-muted text-[10px] font-medium text-muted-foreground">
-          🔒 No audio persistence
+        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-muted text-[10px] font-medium text-muted-foreground">
+          <Lock className="h-3 w-3" />
+          No audio persistence
         </span>
       </div>
 

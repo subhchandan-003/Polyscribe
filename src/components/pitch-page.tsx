@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ArrowRight, Globe, Zap, Target, TrendingUp, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, Globe, Zap, Target, TrendingUp, Users, MapPin } from "lucide-react";
 
 interface PitchPageProps {
   onBack: () => void;
@@ -29,7 +29,7 @@ export function PitchPage({ onBack }: PitchPageProps) {
           <Badge variant="secondary" className="mb-4 text-xs">
             EthAum Venture Partners Hackathon — June 2026
           </Badge>
-          <h1 className="text-4xl font-bold tracking-tight mb-4 leading-tight">
+          <h1 className="font-heading text-4xl font-bold tracking-tight mb-4 leading-tight">
             Every AI scribe is built for<br />
             <span className="text-primary">the wrong 400 million.</span>
           </h1>
@@ -167,21 +167,21 @@ export function PitchPage({ onBack }: PitchPageProps) {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Card className="p-4 text-center">
-              <p className="text-lg mb-1">🇸🇬</p>
+              <MapPin className="h-5 w-5 mx-auto mb-1.5 text-primary" />
               <p className="text-xs font-semibold mb-0.5">Singapore First</p>
               <p className="text-[10px] text-muted-foreground">
                 5–10 pilot clinics via EthAum network (Parkway, Raffles, IHH)
               </p>
             </Card>
             <Card className="p-4 text-center">
-              <p className="text-lg mb-1">🇮🇳</p>
+              <MapPin className="h-5 w-5 mx-auto mb-1.5 text-primary" />
               <p className="text-xs font-semibold mb-0.5">India Second</p>
               <p className="text-[10px] text-muted-foreground">
                 Tier-1 private clinics — Bangalore, Pune, Mumbai GP networks
               </p>
             </Card>
             <Card className="p-4 text-center">
-              <p className="text-lg mb-1">🌏</p>
+              <Globe className="h-5 w-5 mx-auto mb-1.5 text-primary" />
               <p className="text-xs font-semibold mb-0.5">ASEAN & Gulf</p>
               <p className="text-[10px] text-muted-foreground">
                 Malaysia, UAE, Saudi — Arabic & Malay code-switching markets
@@ -217,7 +217,7 @@ export function PitchPage({ onBack }: PitchPageProps) {
         {/* The Ask */}
         <section className="mb-8">
           <Card className="p-8 bg-primary/5 border-primary/15 text-center">
-            <h2 className="text-lg font-bold mb-2">The Ask</h2>
+            <h2 className="font-heading text-lg font-bold mb-2">The Ask</h2>
             <p className="text-sm text-foreground/80 max-w-md mx-auto leading-relaxed">
               PolyScribe is Singapore-positioned, India-priced, and
               multilingual-native. We&apos;re looking for pilot clinic

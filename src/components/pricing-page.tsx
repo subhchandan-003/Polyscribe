@@ -324,7 +324,7 @@ function TrialModal({
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
-            <h2 className="text-lg font-bold tracking-tight">
+            <h2 className="font-heading text-lg font-bold tracking-tight">
               {submitted ? "You&apos;re all set!" : "Start your 14-day free trial"}
             </h2>
             {!submitted && (
@@ -477,7 +477,7 @@ function SalesModal({
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
-            <h2 className="text-lg font-bold tracking-tight">
+            <h2 className="font-heading text-lg font-bold tracking-tight">
               {submitted ? "Message received!" : "Talk to our sales team"}
             </h2>
             {!submitted && (
@@ -627,7 +627,7 @@ export function PricingPage({ onBack }: PricingPageProps) {
 
         {/* ── Header ── */}
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold tracking-tight mb-3">
+          <h1 className="font-heading text-3xl font-bold tracking-tight mb-3">
             Pricing built for emerging markets
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto text-sm leading-relaxed">
@@ -703,10 +703,8 @@ export function PricingPage({ onBack }: PricingPageProps) {
             return (
               <Card
                 key={tier.id}
-                className={`relative flex flex-col p-6 transition-shadow duration-200 ${
-                  tier.highlight
-                    ? "ring-2 ring-teal-500 shadow-lg shadow-teal-500/10"
-                    : "hover:shadow-md"
+                className={`relative flex flex-col p-6 card-hover-lift ${
+                  tier.highlight ? "card-featured" : ""
                 }`}
               >
                 {/* Badge slot — in-flow, fixes overlap */}
@@ -720,7 +718,7 @@ export function PricingPage({ onBack }: PricingPageProps) {
 
                 {/* Name + target */}
                 <div className="mb-4">
-                  <h3 className="text-sm font-bold text-foreground">
+                  <h3 className="font-heading text-sm font-bold text-foreground">
                     {region === "india" ? tier.nameIndia : tier.nameIntl}
                   </h3>
                   <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">

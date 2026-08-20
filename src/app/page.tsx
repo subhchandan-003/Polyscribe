@@ -291,7 +291,7 @@ export default function Home() {
                       <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
                       New Consultation
                     </div>
-                    <h2 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+                    <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground mb-2">
                       Start Recording
                     </h2>
                     <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
@@ -318,7 +318,7 @@ export default function Home() {
                   <Card className="p-5">
                     <div className="flex items-center gap-2 mb-4">
                       <SlidersHorizontal className="h-4 w-4 text-teal-600" />
-                      <h3 className="text-sm font-semibold">Consultation Setup</h3>
+                      <h3 className="font-heading text-sm font-semibold">Consultation Setup</h3>
                     </div>
                     <div className="space-y-5">
                       <SpecialtySelector value={specialty} onChange={setSpecialty} />
@@ -344,7 +344,7 @@ export default function Home() {
                 <div className="flex items-center justify-between pb-3 border-b border-border/60">
                   <div className="flex items-center gap-3">
                     <div className="h-1 w-5 rounded-full bg-teal-500/60" />
-                    <h2 className="text-base font-bold tracking-tight">
+                    <h2 className="font-heading text-base font-bold tracking-tight">
                       Consultation Notes
                     </h2>
                     {saved && (
@@ -397,7 +397,7 @@ export default function Home() {
             {appState === "error" && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] gap-6 animate-fade-in-up">
                 <div className="text-center">
-                  <h2 className="text-xl font-semibold text-destructive mb-2">
+                  <h2 className="font-heading text-xl font-semibold text-destructive mb-2">
                     Something went wrong
                   </h2>
                   <p className="text-sm text-muted-foreground max-w-md">{error}</p>

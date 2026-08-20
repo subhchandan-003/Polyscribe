@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getSessions } from "@/lib/sessions";
 import { SPECIALTIES } from "@/lib/specialty-prompts";
+import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -140,7 +141,7 @@ export function DashboardPage({ onBack }: DashboardPageProps) {
           Back
         </Button>
         <div>
-          <h2 className="text-xl font-semibold tracking-tight flex items-center gap-2">
+          <h2 className="font-heading text-xl font-semibold tracking-tight flex items-center gap-2">
             <BarChart3 className="h-5 w-5 text-primary" />
             Dashboard
           </h2>
@@ -153,13 +154,13 @@ export function DashboardPage({ onBack }: DashboardPageProps) {
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {statCards.map((s) => (
-          <Card key={s.label} className="p-5">
+          <Card key={s.label} className="relative p-5 card-hover-lift stat-card-accent">
             <div className="flex items-start justify-between mb-3">
               <div className={`h-9 w-9 rounded-lg ${s.bg} flex items-center justify-center`}>
                 <s.icon className={`h-4.5 w-4.5 ${s.color}`} />
               </div>
             </div>
-            <p className="text-2xl font-bold tracking-tight">{s.value}</p>
+            <p className="font-heading text-2xl font-bold tracking-tight">{s.value}</p>
             <p className="text-xs font-medium text-foreground/70 mt-0.5">{s.label}</p>
             <p className="text-[11px] text-muted-foreground mt-1 truncate">{s.sub}</p>
           </Card>
@@ -187,11 +188,12 @@ export function DashboardPage({ onBack }: DashboardPageProps) {
                   stats.totalNotes > 0
                     ? Math.round((count / stats.totalNotes) * 100)
                     : 0;
+                const Icon = SPECIALTY_ICONS[spec.id];
                 return (
                   <div key={spec.id}>
                     <div className="flex items-center justify-between text-sm mb-1">
                       <span className="flex items-center gap-2">
-                        <span>{spec.icon}</span>
+                        <Icon className="h-3.5 w-3.5 text-muted-foreground" />
                         {spec.label}
                       </span>
                       <span className="text-muted-foreground">

@@ -104,7 +104,7 @@ function SidebarBody({
           <FileText className="h-4 w-4 text-white" />
         </div>
         <div>
-          <h1 className="text-sm font-semibold tracking-tight leading-none">PolyScribe</h1>
+          <h1 className="font-heading text-sm font-semibold tracking-tight leading-none">PolyScribe</h1>
           <p className="text-[10px] text-teal-600/70 mt-0.5 tracking-wide font-medium">
             Clinical Documentation
           </p>

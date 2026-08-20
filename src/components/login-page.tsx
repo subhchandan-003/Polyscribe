@@ -102,7 +102,7 @@ export function LoginPage() {
         emailLabel: "Work Email",
         emailPlaceholder: "doctor@polyscribe.io",
         btnText: "Access Clinical Portal",
-        securityNote: "DPDP Act & PDPA compliant — no raw audio stored",
+        securityNote: "DPDP Act 2023 compliant — no raw audio stored",
       }
     : {
         pageBg: "bg-gradient-to-br from-emerald-50/50 via-white to-teal-50/40",
@@ -135,7 +135,7 @@ export function LoginPage() {
           >
             <FileText className="h-5 w-5 text-white" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">PolyScribe</h1>
+          <h1 className="font-heading text-2xl font-semibold tracking-tight">PolyScribe</h1>
         </div>
 
         {/* Role-aware subtitle with decorative line */}
@@ -207,7 +207,7 @@ export function LoginPage() {
                   <Shield className="h-6 w-6 animate-pulse-gentle" />
                 )}
               </div>
-              <h2 className="text-lg font-semibold">{tokens.heading}</h2>
+              <h2 className="font-heading text-lg font-semibold">{tokens.heading}</h2>
               <p className="text-xs text-muted-foreground mt-1 max-w-xs mx-auto leading-relaxed">
                 {tokens.subheading}
               </p>
@@ -297,7 +297,7 @@ export function LoginPage() {
       {/* ── Footer ── */}
       <footer className="border-t border-border/50 py-4">
         <p className="text-center text-xs text-muted-foreground">
-          PolyScribe — Supports India DPDP Act and Singapore PDPA compliance
+          PolyScribe — Built for India&apos;s DPDP Act 2023 compliance
         </p>
       </footer>
     </div>

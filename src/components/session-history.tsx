@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { getSessions, deleteSession, type Session } from "@/lib/sessions";
 import { SPECIALTIES } from "@/lib/specialty-prompts";
+import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +15,7 @@ import {
   ChevronRight,
   History,
   ArrowLeft,
+  Stethoscope,
 } from "lucide-react";
 
 interface SessionHistoryProps {
@@ -101,7 +103,7 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
           Back
         </Button>
         <div>
-          <h2 className="text-xl font-semibold tracking-tight flex items-center gap-2">
+          <h2 className="font-heading text-xl font-semibold tracking-tight flex items-center gap-2">
             <History className="h-5 w-5 text-primary" />
             Session History
           </h2>
@@ -130,6 +132,7 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
                 <div className="space-y-2">
                   {dateSessions.map((session) => {
                     const spec = getSpecialtyInfo(session.specialty);
+                    const SpecIcon = spec ? SPECIALTY_ICONS[spec.id] : Stethoscope;
                     const preview = session.soapNote.assessment.slice(0, 120);
                     return (
                       <Card
@@ -147,9 +150,7 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
                           {/* Content */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <span className="text-base leading-none">
-                                {spec?.icon ?? "🩺"}
-                              </span>
+                              <SpecIcon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                               <span className="text-sm font-medium">
                                 {spec?.label ?? "General"}
                               </span>

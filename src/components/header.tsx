@@ -40,7 +40,7 @@ export function Header({ onNavigate }: HeaderProps) {
                 <FileText className="h-4 w-4 text-white" />
               </div>
               <div className="text-left">
-                <h1 className="text-base font-semibold tracking-tight leading-none text-foreground">
+                <h1 className="font-heading text-base font-semibold tracking-tight leading-none text-foreground">
                   PolyScribe
                 </h1>
                 <p className="text-[10px] text-teal-600/70 mt-0.5 tracking-wide font-medium">
@@ -134,7 +134,7 @@ export function Header({ onNavigate }: HeaderProps) {
             <FileText className="h-4 w-4 text-white" />
           </div>
           <div>
-            <h1 className="text-base font-semibold tracking-tight leading-none">
+            <h1 className="font-heading text-base font-semibold tracking-tight leading-none">
               PolyScribe
             </h1>
             <p className="text-[10px] text-emerald-600/70 mt-0.5 font-medium tracking-wide">

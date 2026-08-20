@@ -8,7 +8,6 @@ export type Specialty =
 export interface SpecialtyInfo {
   id: Specialty;
   label: string;
-  icon: string;
   description: string;
 }
 
@@ -16,31 +15,26 @@ export const SPECIALTIES: SpecialtyInfo[] = [
   {
     id: "general",
     label: "General Practice",
-    icon: "🩺",
     description: "General consultations, broad symptom coverage",
   },
   {
     id: "cardiology",
     label: "Cardiology",
-    icon: "❤️",
     description: "Cardiovascular, chest pain, ECG, BP",
   },
   {
     id: "pediatrics",
     label: "Pediatrics",
-    icon: "👶",
     description: "Growth, immunization, developmental milestones",
   },
   {
     id: "ent",
     label: "ENT",
-    icon: "👂",
     description: "Ear, nose, throat, audiometry, voice",
   },
   {
     id: "dermatology",
     label: "Dermatology",
-    icon: "🔬",
     description: "Skin lesions, morphology, distribution patterns",
   },
 ];

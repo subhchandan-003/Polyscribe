@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Play, Sparkles, Stethoscope, Globe, Clock, ArrowLeft } from "lucide-react";
+import { Play, Sparkles, Globe, Clock, ArrowLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DEMO_CASES, type DemoCase } from "@/lib/demo-transcripts";
+import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
 
 interface DemoModeProps {
   onRunDemo: (demoCase: DemoCase) => void;
@@ -38,7 +39,7 @@ export function DemoMode({ onRunDemo, onBack, isProcessing }: DemoModeProps) {
           <Sparkles className="h-3.5 w-3.5" />
           Demo Mode
         </div>
-        <h2 className="text-2xl font-semibold tracking-tight mb-2">
+        <h2 className="font-heading text-2xl font-semibold tracking-tight mb-2">
           Try PolyScribe Instantly
         </h2>
         <p className="text-muted-foreground text-sm max-w-md mx-auto">
@@ -49,7 +50,9 @@ export function DemoMode({ onRunDemo, onBack, isProcessing }: DemoModeProps) {
       </div>
 
       <div className="grid gap-4">
-        {DEMO_CASES.map((demo) => (
+        {DEMO_CASES.map((demo) => {
+          const SpecIcon = SPECIALTY_ICONS[demo.specialty];
+          return (
           <Card
             key={demo.id}
             className={`p-5 cursor-pointer transition-all hover:shadow-md hover:border-primary/30 ${
@@ -62,8 +65,10 @@ export function DemoMode({ onRunDemo, onBack, isProcessing }: DemoModeProps) {
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-xl">{demo.flag}</span>
-                  <h3 className="font-semibold text-foreground truncate">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <SpecIcon className="h-4 w-4 text-primary" />
+                  </div>
+                  <h3 className="font-heading font-semibold text-foreground truncate">
                     {demo.title}
                   </h3>
                 </div>
@@ -76,7 +81,7 @@ export function DemoMode({ onRunDemo, onBack, isProcessing }: DemoModeProps) {
                     {demo.language}
                   </Badge>
                   <Badge variant="secondary" className="gap-1 text-xs">
-                    <Stethoscope className="h-3 w-3" />
+                    <SpecIcon className="h-3 w-3" />
                     {SPECIALTY_LABELS[demo.specialty]}
                   </Badge>
                   <Badge variant="secondary" className="gap-1 text-xs">
@@ -101,7 +106,8 @@ export function DemoMode({ onRunDemo, onBack, isProcessing }: DemoModeProps) {
               )}
             </div>
           </Card>
-        ))}
+          );
+        })}
       </div>
 
       <p className="text-xs text-muted-foreground text-center mt-6 max-w-md mx-auto">

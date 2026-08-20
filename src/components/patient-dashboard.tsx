@@ -90,7 +90,7 @@ export function PatientDashboard() {
               <p className="text-emerald-100/80 text-sm font-medium mb-1">
                 {greeting},
               </p>
-              <h2 className="text-2xl font-bold tracking-tight">{firstName}</h2>
+              <h2 className="font-heading text-2xl font-bold tracking-tight">{firstName}</h2>
               <p className="text-emerald-100/70 text-sm mt-2 max-w-xs leading-relaxed">
                 Your health story, beautifully organized and always private.
               </p>
