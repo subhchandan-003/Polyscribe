@@ -175,6 +175,7 @@ export default function Home() {
     switch (key) {
       case "console":
         setPage("home");
+        setAppState((s) => (s === "history" || s === "demo" ? "idle" : s));
         break;
       case "history":
         setPage("home");
@@ -279,11 +280,26 @@ export default function Home() {
               </div>
             )}
 
-            {/* Recording / Idle State — recorder is the hero; setup lives beside it, never above it */}
+            {/* Recording / Idle State.
+                Pre-consent: consent gate + consultation setup live side by side.
+                Once consent is confirmed, the setup panel goes away — the
+                recorder is the only thing on screen. */}
             {(appState === "idle" || appState === "recording") && (
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 items-start animate-fade-in-up">
+              <div
+                className={
+                  !consented
+                    ? "grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 items-start animate-fade-in-up"
+                    : "flex flex-col items-center text-center gap-7 max-w-xl mx-auto animate-fade-in-up"
+                }
+              >
                 {/* Main column */}
-                <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-7 lg:pt-4">
+                <div
+                  className={
+                    !consented
+                      ? "flex flex-col items-center lg:items-start text-center lg:text-left gap-7 lg:pt-4"
+                      : "flex flex-col items-center text-center gap-7 w-full"
+                  }
+                >
                   <div>
                     <div className="inline-flex items-center gap-2 text-xs font-semibold text-primary rounded-full bg-accent px-3 py-1.5 mb-4 whitespace-nowrap">
                       <span className="relative flex h-2 w-2">
@@ -316,22 +332,24 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Side panel — Specialty + Language, beside the recorder */}
-                <aside className="w-full lg:sticky lg:top-20">
-                  <Card className="p-6">
-                    <div className="flex items-center gap-2.5 mb-5">
-                      <div className="h-8 w-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
-                        <SlidersHorizontal className="h-4 w-4 text-primary" />
+                {/* Side panel — Specialty + Language, only while consent hasn't been given yet */}
+                {!consented && (
+                  <aside className="w-full lg:sticky lg:top-20">
+                    <Card className="p-6">
+                      <div className="flex items-center gap-2.5 mb-5">
+                        <div className="h-8 w-8 rounded-xl bg-accent flex items-center justify-center shrink-0">
+                          <SlidersHorizontal className="h-4 w-4 text-primary" />
+                        </div>
+                        <h3 className="font-heading text-sm font-bold">Consultation Setup</h3>
                       </div>
-                      <h3 className="font-heading text-sm font-bold">Consultation Setup</h3>
-                    </div>
-                    <div className="space-y-5">
-                      <SpecialtySelector value={specialty} onChange={setSpecialty} />
-                      <Separator className="bg-border/60" />
-                      <LanguageSelector config={langConfig} onChange={setLangConfig} />
-                    </div>
-                  </Card>
-                </aside>
+                      <div className="space-y-5">
+                        <SpecialtySelector value={specialty} onChange={setSpecialty} />
+                        <Separator className="bg-border/60" />
+                        <LanguageSelector config={langConfig} onChange={setLangConfig} />
+                      </div>
+                    </Card>
+                  </aside>
+                )}
               </div>
             )}
 
