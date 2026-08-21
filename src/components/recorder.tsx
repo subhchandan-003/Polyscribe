@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Mic, Square, AlertCircle, Radio } from "lucide-react";
 
 interface RecorderProps {
-  onRecordingComplete: (rawText: string) => void;
+  onRecordingComplete: (rawText: string, audioBlob: Blob | null) => void;
   onRecordingStart?: () => void;
   isProcessing: boolean;
 }
@@ -23,6 +23,8 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
   const audioContextRef = useRef<AudioContext | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const transcriptRef = useRef("");
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -59,7 +61,9 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
         return;
       }
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+      });
       streamRef.current = stream;
 
       const audioContext = new AudioContext();
@@ -69,6 +73,20 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
       analyser.fftSize = 256;
       source.connect(analyser);
       analyserRef.current = analyser;
+
+      // Records the actual audio alongside the live Web Speech preview, so
+      // the finished recording can get a more accurate final pass through
+      // Whisper once the doctor stops.
+      audioChunksRef.current = [];
+      const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus"
+        : "audio/webm";
+      const mediaRecorder = new MediaRecorder(stream, { mimeType });
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+      };
+      mediaRecorder.start();
+      mediaRecorderRef.current = mediaRecorder;
 
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
@@ -119,10 +137,6 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
       recognitionRef.current.stop();
       recognitionRef.current = null;
     }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-    }
 
     setIsRecording(false);
     if (timerRef.current) clearInterval(timerRef.current);
@@ -135,10 +149,37 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
     setAnalyserData(new Array(48).fill(0));
 
     const finalText = transcriptRef.current.trim();
-    if (finalText) {
-      onRecordingComplete(finalText);
+
+    const finishUp = (audioBlob: Blob | null) => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((t) => t.stop());
+        streamRef.current = null;
+      }
+      // Proceed if we have either a live Web Speech transcript or recorded
+      // audio, since Whisper can still produce a transcript even when the
+      // browser's live captions came back empty.
+      if (finalText || (audioBlob && audioBlob.size > 0)) {
+        onRecordingComplete(finalText, audioBlob);
+      } else {
+        setError("No speech detected. Please try again and speak clearly.");
+      }
+    };
+
+    // Let the media recorder flush its final chunk before assembling the
+    // blob, otherwise the last second or two of audio gets cut off.
+    const recorder = mediaRecorderRef.current;
+    if (recorder && recorder.state !== "inactive") {
+      recorder.onstop = () => {
+        const blob = audioChunksRef.current.length > 0
+          ? new Blob(audioChunksRef.current, { type: recorder.mimeType || "audio/webm" })
+          : null;
+        audioChunksRef.current = [];
+        mediaRecorderRef.current = null;
+        finishUp(blob);
+      };
+      recorder.stop();
     } else {
-      setError("No speech detected. Please try again and speak clearly.");
+      finishUp(null);
     }
   };
 
@@ -149,6 +190,9 @@ export function Recorder({ onRecordingComplete, onRecordingStart, isProcessing }
       if (recognitionRef.current) {
         recognitionRef.current.onend = null;
         recognitionRef.current.stop();
+      }
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stop();
       }
       if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop());
       if (audioContextRef.current) audioContextRef.current.close();

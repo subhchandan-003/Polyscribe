@@ -58,18 +58,47 @@ export default function Home() {
   const recordingStartRef = useRef<number>(0);
 
   const processRecording = useCallback(
-    async (rawText: string) => {
+    async (rawText: string, audioBlob: Blob | null) => {
       try {
         setAppState("transcribing");
         setError(null);
         setSaved(false);
+
+        // Step 0 (optional): refine the rough Web Speech transcript with a
+        // proper Whisper pass over the recorded audio. Falls back silently
+        // to the live-preview text if Whisper isn't configured or fails,
+        // so a flaky third-party call never blocks the consultation.
+        let bestRawText = rawText;
+        if (audioBlob) {
+          try {
+            const whisperForm = new FormData();
+            whisperForm.append("audio", audioBlob, "consultation.webm");
+            if (langConfig.inputLanguages.length === 1) {
+              whisperForm.append("language", langConfig.inputLanguages[0]);
+            }
+
+            const whisperRes = await fetch("/api/whisper-transcribe", {
+              method: "POST",
+              body: whisperForm,
+            });
+
+            if (whisperRes.ok) {
+              const { transcript: whisperText } = await whisperRes.json();
+              if (typeof whisperText === "string" && whisperText.trim().length > 0) {
+                bestRawText = whisperText;
+              }
+            }
+          } catch {
+            // Whisper refinement is best-effort; keep the Web Speech text.
+          }
+        }
 
         // Step 1: Clean up raw speech text with Claude
         const transcribeRes = await fetch("/api/transcribe", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            rawText,
+            rawText: bestRawText,
             inputLanguages: langConfig.inputLanguages,
           }),
         });
@@ -207,7 +236,7 @@ export default function Home() {
         outputLanguage: demoCase.languageCode === "en" ? "en" : "auto",
       });
       recordingStartRef.current = Date.now() - 180_000; // simulate ~3min
-      processRecording(demoCase.rawTranscript);
+      processRecording(demoCase.rawTranscript, null);
     },
     [processRecording]
   );
