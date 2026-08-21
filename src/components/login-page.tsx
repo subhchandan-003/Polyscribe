@@ -172,12 +172,12 @@ export function LoginPage() {
       </motion.div>
 
       {/* ── Login panel ── */}
-      <div className="flex-1 flex flex-col lg:flex-row items-start justify-center gap-6 px-6 pt-2 pb-16 relative max-w-4xl mx-auto w-full">
+      <div className="flex-1 flex flex-col lg:flex-row items-stretch justify-center gap-6 px-6 pt-2 pb-16 relative max-w-4xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, y: 24, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-          className="w-full max-w-md rounded-3xl glass-strong overflow-hidden mx-auto lg:mx-0"
+          className="w-full max-w-md rounded-3xl glass-strong overflow-hidden mx-auto lg:mx-0 flex flex-col"
         >
           {/* ── Tabs ── */}
           <div className="flex gap-1.5 p-2">
@@ -217,7 +217,7 @@ export function LoginPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="p-7 pt-4 space-y-5"
+              className="p-7 pt-4 flex-1 flex flex-col space-y-5"
             >
               <div className="text-center mb-1">
                 <h2 className="font-heading text-xl font-bold text-foreground tracking-tight">{copy.heading}</h2>
@@ -296,23 +296,26 @@ export function LoginPage() {
                 {isSubmitting ? "Signing in…" : copy.btnText}
               </motion.button>
 
-              {/* Demo credentials */}
-              <div className="pt-1 border-t border-border/60">
-                <button
-                  type="button"
-                  onClick={fillDemo}
-                  className="w-full text-xs font-medium text-muted-foreground py-2.5 hover:text-primary transition-colors cursor-pointer flex items-center justify-center gap-1.5"
-                >
-                  <Sparkles className="h-3.5 w-3.5" />
-                  Use demo {tab} credentials
-                </button>
-              </div>
+              {/* Demo credentials + security note settle to the bottom of the
+                  card, so both login panels match the quick-login panel's
+                  height instead of leaving an awkward gap or falling short. */}
+              <div className="mt-auto space-y-4">
+                <div className="pt-1 border-t border-border/60">
+                  <button
+                    type="button"
+                    onClick={fillDemo}
+                    className="w-full text-xs font-medium text-muted-foreground py-2.5 hover:text-primary transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                  >
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Use demo {tab} credentials
+                  </button>
+                </div>
 
-              {/* Security micro-note */}
-              <p className="text-[11px] text-center text-muted-foreground/80 flex items-center justify-center gap-1.5">
-                <Lock className="h-3 w-3" />
-                {copy.securityNote}
-              </p>
+                <p className="text-[11px] text-center text-muted-foreground/80 flex items-center justify-center gap-1.5">
+                  <Lock className="h-3 w-3" />
+                  {copy.securityNote}
+                </p>
+              </div>
             </motion.form>
           </AnimatePresence>
         </motion.div>
@@ -325,7 +328,7 @@ export function LoginPage() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-            className="w-full max-w-md rounded-3xl glass-strong overflow-hidden p-6"
+            className="w-full max-w-md rounded-3xl glass-strong overflow-hidden p-6 flex flex-col"
           >
             <div className="flex items-center gap-2 mb-1">
               <Zap className="h-4 w-4 text-primary" />
@@ -337,7 +340,7 @@ export function LoginPage() {
                 : "Jump straight in as one of five demo patients, each with their own care team and shared consultation history."}
             </p>
 
-            <div className="space-y-2">
+            <div className="space-y-2 my-auto">
               {isDoctor
                 ? QUICK_LOGIN_DOCTORS.map((doctor) => {
                     const Icon = SPECIALTY_ICONS[doctor.specialty];
