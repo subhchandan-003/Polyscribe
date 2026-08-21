@@ -18,9 +18,16 @@ interface DoctorSeed {
   sessions: SeedSession[];
 }
 
-/** The demo patient account these seed sessions get shared with, so the
- * patient portal has real, specialty-varied history out of the box. */
-export const DEMO_PATIENT_EMAIL = "patient@polyscribe.io";
+/** Five demo patient accounts these seed sessions get shared with, so
+ * every patient portal has real, distinct history out of the box —
+ * mirrors the five quick-login doctors on the other side. */
+export const DEMO_PATIENTS = {
+  rahul: "patient@polyscribe.io",
+  anjali: "anjali.nair@polyscribe.io",
+  suresh: "suresh.kumar@polyscribe.io",
+  meera: "meera.pillai@polyscribe.io",
+  arjun: "arjun.das@polyscribe.io",
+} as const;
 
 export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
   // Dr. Priya Sharma — General Practice — Hindi — Delhi
@@ -35,7 +42,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["hi"],
         outputLanguage: "en",
         duration: 312,
-        patientEmail: DEMO_PATIENT_EMAIL,
+        patientEmail: DEMO_PATIENTS.rahul,
         transcript:
           "Doctor: Namaste, kya problem hai aapko?\nPatient: Doctor sahab, teen din se bukhar hai aur pura sharir dukh raha hai.\nDoctor: Khaansi ya gala kharab bhi hai?\nPatient: Halka sa gala kharab hai, khaansi nahi hai.\nDoctor: Theek hai, temperature check karte hain. 100.8 F hai. BP normal hai, 118/76. Yeh viral fever lag raha hai.\nPatient: Kitne din lagenge thik hone mein?\nDoctor: Teen se paanch din mein theek ho jaayega. Paracetamol dijiyega bukhar ke liye aur aaram kariye, paani zyada piyiye.",
         soapNote: {
@@ -59,6 +66,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["hi"],
         outputLanguage: "en",
         duration: 405,
+        patientEmail: DEMO_PATIENTS.meera,
         transcript:
           "Doctor: Namaste, sugar report kaisa aaya?\nPatient: Fasting 142 aaya hai, pehle se thoda zyada hai.\nDoctor: Diet aur exercise kaisi chal rahi hai?\nPatient: Walk toh roz karta hoon, par mithai kam nahi kar paaya.\nDoctor: Samajh sakta hoon. Metformin ki dose thodi badhaate hain, aur meetha strictly avoid kariye. Ek mahine baad phir se sugar test karvaiye.",
         soapNote: {
@@ -80,6 +88,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["hi"],
         outputLanguage: "en",
         duration: 268,
+        patientEmail: DEMO_PATIENTS.meera,
         transcript:
           "Doctor: Kya takleef hai?\nPatient: Sardi lagi hai, naak bah rahi hai aur halki khaansi hai.\nDoctor: Bukhar hai kya?\nPatient: Nahi, bukhar nahi hai.\nDoctor: Chest saaf hai, koi infection nahi lag raha. Yeh common cold hai, apne aap theek ho jaayega. Steam lijiye aur zaroorat pade toh cough syrup le sakte hain.",
         soapNote: {
@@ -108,7 +117,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["ta"],
         outputLanguage: "en",
         duration: 480,
-        patientEmail: DEMO_PATIENT_EMAIL,
+        patientEmail: DEMO_PATIENTS.rahul,
         transcript:
           "Doctor: Vanakkam, eppadi irukinga? BP medicine sariya edukaringala?\nPatient: Aama doctor, but sometimes forget pandren.\nDoctor: BP ippo 148/94 irukku, konjam high a irukku. Salt intake kammi pannunga.\nPatient: Sari doctor, weight um konjam kooda irukku.\nDoctor: Amlodipine dose konjam increase pannalam. Exercise pannunga, walking 30 minutes daily.",
         soapNote: {
@@ -129,6 +138,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["ta"],
         outputLanguage: "en",
         duration: 522,
+        patientEmail: DEMO_PATIENTS.meera,
         transcript:
           "Doctor: Enna problem?\nPatient: Doctor, nenjula pain irundhuchu, konjam neram than.\nDoctor: Exertion la varutha, rest pannumbodhu varutha?\nPatient: Naan nadandhu porenbodhu than varuthu.\nDoctor: ECG eduthu paakalam, troponin test um pannuvom. Family la yaarukavadhu heart problem irukka?\nPatient: Appa ku irundhuchu doctor.\nDoctor: Sari, ippo stable angina nu doubt irukku, konjam tests pannanum.",
         soapNote: {
@@ -148,6 +158,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["ta"],
         outputLanguage: "en",
         duration: 390,
+        patientEmail: DEMO_PATIENTS.arjun,
         transcript:
           "Doctor: Angioplasty aana appuram eppadi irukinga?\nPatient: Nalla irukken doctor, pain edhuvum illa.\nDoctor: Medicines regular a edukaringala?\nPatient: Aama, ellam time ku eduthukren.\nDoctor: Nalla irukku. Wound site clean a irukku. Konjam heavy lifting avoid pannunga innum konjam naal.",
         soapNote: {
@@ -176,6 +187,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["mr"],
         outputLanguage: "en",
         duration: 240,
+        patientEmail: DEMO_PATIENTS.anjali,
         transcript:
           "Doctor: Namaskar, aajcha vaccination sathi aala ka?\nPatient's parent: Ho doctor, sha varshacha DPT booster ghyaycha ahe.\nDoctor: Baalachi weight ani height baghto. Sagla normal distha. Vaccine deto, thoda taap yeu shakto ek don divas.\nParent: Thik ahe doctor, kahi precaution ghyaycha ka?\nDoctor: Taap alyavar paracetamol dya, ani injection chya jaghi swelling zali tar cold compress dya.",
         soapNote: {
@@ -195,6 +207,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["mr"],
         outputLanguage: "en",
         duration: 300,
+        patientEmail: DEMO_PATIENTS.anjali,
         transcript:
           "Doctor: Kay problem ahe baalala?\nParent: Doctor, don divas taap ahe ani khokla pan yeto ahe.\nDoctor: Baala jevla ka nit? Khup ashakt distoy ka?\nParent: Jevta ahe thoda kami, pan khelto ahe thoda.\nDoctor: Chest ऐकतो, clear ahe. Taap 101 F ahe. Hi viral infection distiye, kahi din madhe theek hoil.",
         soapNote: {
@@ -214,6 +227,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["mr"],
         outputLanguage: "en",
         duration: 275,
+        patientEmail: DEMO_PATIENTS.anjali,
         transcript:
           "Doctor: Routine growth checkup sathi aala ahat na?\nParent: Ho doctor, weight thik vadhat ahe ka baghaycha hota.\nDoctor: Weight ani height chart baghto, growth curve nit ahe. Diet madhe kay deta roj?\nParent: Doodh, poli bhaji, phal detoy.\nDoctor: Chan ahe, iron rich pदार्थ pan thoda vadhava, jasa palak.",
         soapNote: {
@@ -242,6 +256,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["te"],
         outputLanguage: "en",
         duration: 350,
+        patientEmail: DEMO_PATIENTS.suresh,
         transcript:
           "Doctor: Namaskaram, ento samasya?\nPatient: Doctor, muku band ayindi vaara rojula nunchi, thala noppi kuda undi.\nDoctor: Face meeda pressure feel avutunda?\nPatient: Avunu, especially forehead daggara.\nDoctor: Sinus examination chesthanu, konchem inflammation kanipistundi. Idi chronic sinusitis laga undi, konni tests avasaram.",
         soapNote: {
@@ -261,6 +276,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["te"],
         outputLanguage: "en",
         duration: 290,
+        patientEmail: DEMO_PATIENTS.suresh,
         transcript:
           "Doctor: Emi samasya?\nPatient: Gొంతు noppi undi, medha okasari mingina noppi ekkuva avutundi.\nDoctor: Jwaram undha?\nPatient: Konchem undi, 100 daaka vachindi.\nDoctor: Throat examine chesthanu, tonsils swollen ga unnayi, white patches kuda kanipistunnayi. Idi tonsillitis.",
         soapNote: {
@@ -280,6 +296,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["te"],
         outputLanguage: "en",
         duration: 410,
+        patientEmail: DEMO_PATIENTS.suresh,
         transcript:
           "Doctor: Vinikidi problem gurinchi cheppandi.\nPatient: Doctor, konni nelala nunchi vinadam kastam avutundi, especially right chevi lo.\nDoctor: Hearing test chesthanu, audiometry avasaram. Chevilo wax kuda konchem undi.\nPatient: Idi permanent ah doctor?\nDoctor: Test result tarvatha cheppagalanu, ippudu wax remove chesi malli test chesthanu.",
         soapNote: {
@@ -308,7 +325,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["ml"],
         outputLanguage: "en",
         duration: 260,
-        patientEmail: DEMO_PATIENT_EMAIL,
+        patientEmail: DEMO_PATIENTS.rahul,
         transcript:
           "Doctor: Namaskaram, mukhathe pimples enthanu avastha?\nPatient: Doctor, konnu improve aayi but chila new pimples varunnu.\nDoctor: Face examine cheyyam. Redness kurayunnund, but chila active lesions undu.\nPatient: Medicine continue cheyyano doctor?\nDoctor: Cream continue cheyyu, but strength kurachu maattaam side effects ozhivakkan.",
         soapNote: {
@@ -328,6 +345,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["ml"],
         outputLanguage: "en",
         duration: 330,
+        patientEmail: DEMO_PATIENTS.arjun,
         transcript:
           "Doctor: Enthanu prashnam?\nPatient: Doctor, kaikalilum kalilum chorച്ചil patches varunnu, valare chorachu.\nDoctor: Eppol thottanu thudangiyathu?\nPatient: Randu azhcha munp thottu.\nDoctor: Skin examine cheyyam, ithu eczema pole thonnunnu. Moisturizer regular aayi upayogikkanam.",
         soapNote: {
@@ -347,6 +365,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["ml"],
         outputLanguage: "en",
         duration: 245,
+        patientEmail: DEMO_PATIENTS.arjun,
         transcript:
           "Doctor: Kalinte vishayam parayu.\nPatient: Doctor, kalinte vira patches vannu, valare itchy aanu, edges il redness undu.\nDoctor: Konnu munp same problem undayirunno?\nPatient: Illa, puthiya prashnamanu.\nDoctor: Ithu fungal infection pole thonnunnu, examine cheyyam. Antifungal cream kodukkam.",
         soapNote: {

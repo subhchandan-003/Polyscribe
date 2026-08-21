@@ -38,6 +38,24 @@ const QUICK_LOGIN_DOCTORS: QuickLoginDoctor[] = [
   { name: "Dr. Vikram Nair", email: "vikram.nair@polyscribe.io", password: "doctor123", specialty: "dermatology", language: "Malayalam" },
 ];
 
+interface QuickLoginPatient {
+  name: string;
+  email: string;
+  password: string;
+  focus: string;
+  visits: number;
+}
+
+/* Five patients, each with a different care-team makeup and their own
+ * pre-seeded, shared consultation history (see seed-sessions.ts). */
+const QUICK_LOGIN_PATIENTS: QuickLoginPatient[] = [
+  { name: "Rahul Mehta", email: "patient@polyscribe.io", password: "patient123", focus: "General, Cardiology & Dermatology", visits: 3 },
+  { name: "Anjali Nair", email: "anjali.nair@polyscribe.io", password: "patient123", focus: "Pediatric care", visits: 3 },
+  { name: "Suresh Kumar", email: "suresh.kumar@polyscribe.io", password: "patient123", focus: "ENT care", visits: 3 },
+  { name: "Meera Pillai", email: "meera.pillai@polyscribe.io", password: "patient123", focus: "General & Cardiology", visits: 3 },
+  { name: "Arjun Das", email: "arjun.das@polyscribe.io", password: "patient123", focus: "Cardiology & Dermatology", visits: 3 },
+];
+
 /* Heartbeat trace, shared decorative motif */
 function TraceLine() {
   return (
@@ -86,10 +104,10 @@ export function LoginPage() {
     setError(null);
   };
 
-  const handleQuickLogin = (doctor: QuickLoginDoctor) => {
+  const handleQuickLogin = (account: { email: string; password: string }) => {
     setError(null);
     setIsSubmitting(true);
-    const result = login(doctor.email, doctor.password);
+    const result = login(account.email, account.password);
     if (!result.success) setError(result.error ?? "Login failed");
     setIsSubmitting(false);
   };
@@ -298,55 +316,76 @@ export function LoginPage() {
           </AnimatePresence>
         </motion.div>
 
-        {/* ── Quick login: five doctors, five specialties, five languages ── */}
-        <AnimatePresence>
-          {isDoctor && (
-            <motion.div
-              initial={{ opacity: 0, y: 24, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-              className="w-full max-w-md rounded-3xl glass-strong overflow-hidden p-6"
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <Zap className="h-4 w-4 text-primary" />
-                <h3 className="font-heading text-base font-bold text-foreground">Quick Login</h3>
-              </div>
-              <p className="text-xs text-muted-foreground mb-4">
-                Jump straight in as one of five demo doctors, each with their own
-                specialty, language, and consultation history.
-              </p>
+        {/* ── Quick login: five demo accounts per portal, one tap to sign in ── */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={tab}
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+            className="w-full max-w-md rounded-3xl glass-strong overflow-hidden p-6"
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <Zap className="h-4 w-4 text-primary" />
+              <h3 className="font-heading text-base font-bold text-foreground">Quick Login</h3>
+            </div>
+            <p className="text-xs text-muted-foreground mb-4">
+              {isDoctor
+                ? "Jump straight in as one of five demo doctors, each with their own specialty, language, and consultation history."
+                : "Jump straight in as one of five demo patients, each with their own care team and shared consultation history."}
+            </p>
 
-              <div className="space-y-2">
-                {QUICK_LOGIN_DOCTORS.map((doctor) => {
-                  const Icon = SPECIALTY_ICONS[doctor.specialty];
-                  const colors = SPECIALTY_COLORS[doctor.specialty];
-                  const specialtyLabel =
-                    SPECIALTIES.find((s) => s.id === doctor.specialty)?.label ?? doctor.specialty;
-                  return (
+            <div className="space-y-2">
+              {isDoctor
+                ? QUICK_LOGIN_DOCTORS.map((doctor) => {
+                    const Icon = SPECIALTY_ICONS[doctor.specialty];
+                    const colors = SPECIALTY_COLORS[doctor.specialty];
+                    const specialtyLabel =
+                      SPECIALTIES.find((s) => s.id === doctor.specialty)?.label ?? doctor.specialty;
+                    return (
+                      <button
+                        key={doctor.email}
+                        type="button"
+                        onClick={() => handleQuickLogin(doctor)}
+                        disabled={isSubmitting}
+                        className="w-full flex items-center gap-3 rounded-2xl p-3 text-left hover:bg-muted/60 transition-colors duration-300 cursor-pointer disabled:opacity-60"
+                      >
+                        <div className={`h-10 w-10 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center shrink-0`}>
+                          <Icon className="h-4.5 w-4.5" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-foreground truncate">{doctor.name}</p>
+                          <p className="text-xs text-muted-foreground truncate">{specialtyLabel}</p>
+                        </div>
+                        <span className="text-xs font-medium text-primary rounded-full bg-accent px-2.5 py-1 shrink-0">
+                          {doctor.language}
+                        </span>
+                      </button>
+                    );
+                  })
+                : QUICK_LOGIN_PATIENTS.map((patient) => (
                     <button
-                      key={doctor.email}
+                      key={patient.email}
                       type="button"
-                      onClick={() => handleQuickLogin(doctor)}
+                      onClick={() => handleQuickLogin(patient)}
                       disabled={isSubmitting}
                       className="w-full flex items-center gap-3 rounded-2xl p-3 text-left hover:bg-muted/60 transition-colors duration-300 cursor-pointer disabled:opacity-60"
                     >
-                      <div className={`h-10 w-10 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center shrink-0`}>
-                        <Icon className="h-4.5 w-4.5" />
+                      <div className="h-10 w-10 rounded-xl bg-accent text-primary flex items-center justify-center shrink-0">
+                        <Heart className="h-4.5 w-4.5" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-foreground truncate">{doctor.name}</p>
-                        <p className="text-xs text-muted-foreground truncate">{specialtyLabel}</p>
+                        <p className="text-sm font-semibold text-foreground truncate">{patient.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{patient.focus}</p>
                       </div>
                       <span className="text-xs font-medium text-primary rounded-full bg-accent px-2.5 py-1 shrink-0">
-                        {doctor.language}
+                        {patient.visits} visits
                       </span>
                     </button>
-                  );
-                })}
-              </div>
-            </motion.div>
-          )}
+                  ))}
+            </div>
+          </motion.div>
         </AnimatePresence>
       </div>
 

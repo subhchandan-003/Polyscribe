@@ -105,6 +105,34 @@ const DEMO_USERS: (User & { password: string })[] = [
     email: "patient@polyscribe.io",
     password: "patient123",
   },
+  {
+    id: "pat-2",
+    name: "Anjali Nair",
+    role: "patient",
+    email: "anjali.nair@polyscribe.io",
+    password: "patient123",
+  },
+  {
+    id: "pat-3",
+    name: "Suresh Kumar",
+    role: "patient",
+    email: "suresh.kumar@polyscribe.io",
+    password: "patient123",
+  },
+  {
+    id: "pat-4",
+    name: "Meera Pillai",
+    role: "patient",
+    email: "meera.pillai@polyscribe.io",
+    password: "patient123",
+  },
+  {
+    id: "pat-5",
+    name: "Arjun Das",
+    role: "patient",
+    email: "arjun.das@polyscribe.io",
+    password: "patient123",
+  },
 ];
 
 export function AuthProvider({ children }: { children: ReactNode }) {
