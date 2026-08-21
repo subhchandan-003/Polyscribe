@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Avatar } from "@/components/ui/avatar";
 import {
   FileText, Clock, Globe, Shield, Heart, Mic, Languages, LogOut, Activity,
   Pencil, Users, Pill, CalendarClock,
@@ -141,7 +142,8 @@ export function PatientDashboard() {
           </span>
           <div className="flex-1" />
           {user && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
+              <Avatar name={user.name} size="xs" />
               <span className="text-xs text-muted-foreground hidden sm:inline">{user.name}</span>
               <Button variant="ghost" size="icon-sm" onClick={logout} className="text-muted-foreground hover:text-foreground rounded-xl">
                 <LogOut className="h-3.5 w-3.5" />
@@ -159,13 +161,18 @@ export function PatientDashboard() {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
           <Card className="p-7 mb-6">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">
-              {greeting},
-            </p>
-            <h2 className="font-heading text-3xl font-bold tracking-tight">
-              <span className="text-gradient-brand">{firstName}</span>
-            </h2>
-            <p className="text-muted-foreground text-sm mt-2 max-w-md leading-relaxed">
+            <div className="flex items-center gap-4">
+              {user && <Avatar name={user.name} size="lg" />}
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">
+                  {greeting},
+                </p>
+                <h2 className="font-heading text-3xl font-bold tracking-tight">
+                  <span className="text-gradient-brand">{firstName}</span>
+                </h2>
+              </div>
+            </div>
+            <p className="text-muted-foreground text-sm mt-4 max-w-md leading-relaxed">
               Your health story, organized and always private.
             </p>
 

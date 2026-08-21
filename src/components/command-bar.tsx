@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
+import { Avatar } from "@/components/ui/avatar";
 import { CommandPalette } from "@/components/command-palette";
 
 export type NavKey =
@@ -118,6 +119,7 @@ export function CommandBar({ active, onNavigate, onNewConsultation }: CommandBar
           {/* User */}
           {user && (
             <div className="flex items-center gap-2.5 pl-3 border-l border-white/50 h-full">
+              <Avatar name={user.name} size="sm" />
               <span className="hidden sm:block text-sm font-medium text-muted-foreground truncate max-w-[120px]">
                 {user.name}
               </span>

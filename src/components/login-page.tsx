@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "@/lib/auth-context";
 import { SPECIALTIES, type Specialty } from "@/lib/specialty-prompts";
 import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
+import { Avatar } from "@/components/ui/avatar";
 import {
   Stethoscope,
   Heart,
@@ -372,9 +373,7 @@ export function LoginPage() {
                       disabled={isSubmitting}
                       className="w-full flex items-center gap-3 rounded-2xl p-3 text-left hover:bg-muted/60 transition-colors duration-300 cursor-pointer disabled:opacity-60"
                     >
-                      <div className="h-10 w-10 rounded-xl bg-accent text-primary flex items-center justify-center shrink-0">
-                        <Heart className="h-4.5 w-4.5" />
-                      </div>
+                      <Avatar name={patient.name} />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-foreground truncate">{patient.name}</p>
                         <p className="text-xs text-muted-foreground truncate">{patient.focus}</p>
