@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import type { SOAPNote } from "@/lib/claude";
+import { SOAP_SECTIONS, buildNotePlainText, downloadNoteTxt, printNote } from "@/lib/note-export";
 
 interface SOAPPanelProps {
   soapNote: SOAPNote | null;
@@ -14,29 +15,17 @@ interface SOAPPanelProps {
 
 /* Distinct legend hues for quick section scanning. Deliberately avoids
  * teal, which is reserved as the primary UI accent color. */
-const SECTIONS: {
-  key: keyof SOAPNote;
-  label: string;
-  color: string;
-  hex: string;
-}[] = [
-  { key: "subjective",  label: "Subjective",  color: "text-blue-400",   hex: "#60a5fa" },
-  { key: "objective",   label: "Objective",   color: "text-cyan-400",   hex: "#22d3ee" },
-  { key: "assessment",  label: "Assessment",  color: "text-amber-400",  hex: "#fbbf24" },
-  { key: "plan",        label: "Plan",        color: "text-violet-400", hex: "#a78bfa" },
-  { key: "medications", label: "Medications", color: "text-rose-400",   hex: "#fb7185" },
-  { key: "followUp",    label: "Follow-up",   color: "text-orange-400", hex: "#fb923c" },
-];
+const SECTION_COLORS: Record<keyof SOAPNote, string> = {
+  subjective: "text-blue-400",
+  objective: "text-cyan-400",
+  assessment: "text-amber-400",
+  plan: "text-violet-400",
+  medications: "text-rose-400",
+  followUp: "text-orange-400",
+};
 
 /* Pre-computed skeleton widths, avoids Math.random() on every render */
 const SKELETON_WIDTHS = ["85%", "68%", "90%", "72%", "78%", "83%"];
-
-const escapeHtml = (text: string) =>
-  text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 
 export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
   const [copied, setCopied] = useState(false);
@@ -51,76 +40,17 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
 
   const handleCopy = async () => {
     if (!currentNote) return;
-    const text = SECTIONS.map((s) => `${s.label}:\n${currentNote[s.key]}`).join("\n\n");
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(buildNotePlainText(currentNote));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleExportTxt = () => {
-    if (!currentNote) return;
-    const text = `SOAP NOTE\n${"=".repeat(40)}\n\n${SECTIONS.map(
-      (s) => `${s.label.toUpperCase()}:\n${currentNote[s.key]}`
-    ).join("\n\n" + "-".repeat(40) + "\n\n")}`;
-    const blob = new Blob([text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `soap-note-${new Date().toISOString().slice(0, 10)}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+    if (currentNote) downloadNoteTxt(currentNote);
   };
 
   const handleExportPdf = () => {
-    if (!currentNote) return;
-    const date = new Date().toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-
-    // Print output always stays light and paper-styled, since a printed
-    // clinical record should read cleanly regardless of the app's theme.
-    const sectionsHtml = SECTIONS.map(
-      (s) => `
-        <div style="margin-bottom:20px;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-            <span style="display:inline-block;width:3px;height:18px;background:${s.hex};margin-right:2px;"></span>
-            <h3 style="margin:0;font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:#555;font-weight:600;">${s.label}</h3>
-          </div>
-          <p style="margin:0;font-size:14px;line-height:1.65;color:#1a1a1a;white-space:pre-wrap;padding-left:11px;">${escapeHtml(currentNote[s.key])}</p>
-        </div>
-        ${s.key !== "followUp" ? '<hr style="border:none;border-top:1px solid #efefef;margin:16px 0;" />' : ""}
-      `
-    ).join("");
-
-    const html = `<!DOCTYPE html>
-<html><head><meta charset="utf-8" /><title>SOAP Note | PolyScribe</title>
-<style>
-  @media print { body { margin:0; } @page { margin:20mm 15mm; } }
-  body { font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;max-width:700px;margin:40px auto;padding:0 20px;color:#1a1a1a; }
-</style></head><body>
-  <div style="border-bottom:2px solid #0d9488;padding-bottom:12px;margin-bottom:24px;">
-    <h1 style="margin:0;font-size:20px;color:#0d9488;">PolyScribe</h1>
-    <p style="margin:4px 0 0;font-size:11px;color:#888;">Multilingual AI Clinical Scribe</p>
-  </div>
-  <div style="margin-bottom:24px;">
-    <h2 style="margin:0;font-size:18px;">SOAP Note</h2>
-    <p style="margin:4px 0 0;font-size:12px;color:#888;">${date}</p>
-  </div>
-  ${sectionsHtml}
-  <div style="margin-top:32px;padding-top:12px;border-top:1px solid #e5e5e5;font-size:11px;color:#aaa;text-align:center;">
-    Generated by PolyScribe. Audio deleted after note generation
-  </div>
-</body></html>`;
-
-    const win = window.open("", "_blank");
-    if (win) {
-      win.document.write(html);
-      win.document.close();
-      setTimeout(() => win.print(), 300);
-    }
+    if (currentNote) printNote(currentNote);
   };
 
   const handleSectionEdit = (key: keyof SOAPNote, value: string) => {
@@ -141,7 +71,7 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
           </h2>
         </div>
         <div className="flex-1 space-y-5">
-          {SECTIONS.map((s, idx) => (
+          {SOAP_SECTIONS.map((s, idx) => (
             <div key={s.key} className="space-y-2 pl-3.5 rounded-r-lg" style={{ borderLeft: `3px solid ${s.hex}40` }}>
               <div className="flex items-center gap-2">
                 <div className="h-3 w-16 rounded-full bg-muted animate-pulse" />
@@ -197,7 +127,7 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
 
       <ScrollArea className="flex-1 -mr-4 pr-4">
         <div className="space-y-5">
-          {SECTIONS.map((section, idx) => (
+          {SOAP_SECTIONS.map((section, idx) => (
             <div key={section.key}>
               {/* Section with clinical left-border accent */}
               <div
@@ -205,7 +135,7 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
                 style={{ borderLeft: `3px solid ${section.hex}` }}
               >
                 <h3
-                  className={`text-xs font-bold uppercase tracking-wide mb-1.5 ${section.color}`}
+                  className={`text-xs font-bold uppercase tracking-wide mb-1.5 ${SECTION_COLORS[section.key]}`}
                 >
                   {section.label}
                 </h3>
@@ -220,7 +150,7 @@ export function SOAPPanel({ soapNote, isLoading }: SOAPPanelProps) {
                   {currentNote[section.key]}
                 </div>
               </div>
-              {idx < SECTIONS.length - 1 && (
+              {idx < SOAP_SECTIONS.length - 1 && (
                 <Separator className="mt-4 opacity-40" />
               )}
             </div>

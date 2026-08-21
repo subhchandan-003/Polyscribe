@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { getSessions, deleteSession, type Session } from "@/lib/sessions";
+import {
+  getSessions,
+  deleteSession,
+  shareSessionWithPatient,
+  unshareSessionFromPatient,
+  type Session,
+} from "@/lib/sessions";
 import { useAuth } from "@/lib/auth-context";
 import { SPECIALTIES } from "@/lib/specialty-prompts";
 import { SPECIALTY_ICONS } from "@/lib/specialty-icons";
@@ -17,6 +23,9 @@ import {
   History,
   ArrowLeft,
   Stethoscope,
+  Share2,
+  X,
+  Check,
 } from "lucide-react";
 
 interface SessionHistoryProps {
@@ -29,10 +38,26 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
   const [sessions, setSessions] = useState<Session[]>(() =>
     user ? getSessions(user.id) : []
   );
+  const [shareOpenId, setShareOpenId] = useState<string | null>(null);
+  const [shareEmail, setShareEmail] = useState("");
 
   const handleDelete = (id: string) => {
     if (!user) return;
     deleteSession(user.id, id);
+    setSessions(getSessions(user.id));
+  };
+
+  const handleShare = (id: string) => {
+    if (!user || !shareEmail.trim()) return;
+    shareSessionWithPatient(user.id, id, shareEmail.trim());
+    setSessions(getSessions(user.id));
+    setShareOpenId(null);
+    setShareEmail("");
+  };
+
+  const handleUnshare = (id: string) => {
+    if (!user) return;
+    unshareSessionFromPatient(user.id, id);
     setSessions(getSessions(user.id));
   };
 
@@ -135,6 +160,7 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
                     const spec = getSpecialtyInfo(session.specialty);
                     const SpecIcon = spec ? SPECIALTY_ICONS[spec.id] : Stethoscope;
                     const preview = session.soapNote.assessment.slice(0, 120);
+                    const isSharing = shareOpenId === session.id;
                     return (
                       <Card
                         key={session.id}
@@ -169,7 +195,7 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
                               {preview}
                               {session.soapNote.assessment.length > 120 ? "…" : ""}
                             </p>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
                               <span className="text-[10px] text-muted-foreground/70">
                                 {formatFullDate(session.timestamp)}
                               </span>
@@ -180,11 +206,76 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
                                   {session.duration % 60}s
                                 </span>
                               )}
+                              {session.patientEmail && (
+                                <span
+                                  className="text-[10px] font-medium text-primary flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 cursor-pointer"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleUnshare(session.id);
+                                  }}
+                                  title="Click to stop sharing"
+                                >
+                                  <Check className="h-2.5 w-2.5" />
+                                  Shared with {session.patientEmail}
+                                  <X className="h-2.5 w-2.5" />
+                                </span>
+                              )}
                             </div>
+
+                            {/* Share form */}
+                            {isSharing && (
+                              <div
+                                className="flex items-center gap-2 mt-3"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <input
+                                  autoFocus
+                                  type="email"
+                                  value={shareEmail}
+                                  onChange={(e) => setShareEmail(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") handleShare(session.id);
+                                    if (e.key === "Escape") setShareOpenId(null);
+                                  }}
+                                  placeholder="patient@polyscribe.io"
+                                  className="flex-1 h-8 px-3 rounded-lg border border-input bg-background text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
+                                />
+                                <Button
+                                  size="sm"
+                                  className="h-8 rounded-lg text-xs px-3"
+                                  onClick={() => handleShare(session.id)}
+                                >
+                                  Share
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0 rounded-lg text-muted-foreground"
+                                  onClick={() => setShareOpenId(null)}
+                                >
+                                  <X className="h-3.5 w-3.5" />
+                                </Button>
+                              </div>
+                            )}
                           </div>
 
                           {/* Actions */}
-                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                            {!session.patientEmail && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 w-7 p-0 rounded-full text-muted-foreground hover:text-primary hover:bg-accent"
+                                title="Share with patient"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShareEmail("");
+                                  setShareOpenId(isSharing ? null : session.id);
+                                }}
+                              >
+                                <Share2 className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
                             <Button
                               variant="ghost"
                               size="sm"

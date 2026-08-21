@@ -145,6 +145,8 @@ export default function Home() {
             transcript: rawTranscript,
             soapNote: note,
             duration,
+            doctorId: user.id,
+            doctorName: user.name,
           });
         }
         setSaved(true);

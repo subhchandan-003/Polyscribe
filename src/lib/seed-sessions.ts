@@ -12,14 +12,20 @@ import type { Specialty } from "@/lib/specialty-prompts";
 type SeedSession = Omit<Session, "id" | "timestamp"> & { daysAgo: number };
 
 interface DoctorSeed {
+  doctorName: string;
   specialty: Specialty;
   language: string;
   sessions: SeedSession[];
 }
 
+/** The demo patient account these seed sessions get shared with, so the
+ * patient portal has real, specialty-varied history out of the box. */
+export const DEMO_PATIENT_EMAIL = "patient@polyscribe.io";
+
 export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
   // Dr. Priya Sharma — General Practice — Hindi — Delhi
   "doc-1": {
+    doctorName: "Dr. Priya Sharma",
     specialty: "general",
     language: "hi",
     sessions: [
@@ -29,6 +35,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["hi"],
         outputLanguage: "en",
         duration: 312,
+        patientEmail: DEMO_PATIENT_EMAIL,
         transcript:
           "Doctor: Namaste, kya problem hai aapko?\nPatient: Doctor sahab, teen din se bukhar hai aur pura sharir dukh raha hai.\nDoctor: Khaansi ya gala kharab bhi hai?\nPatient: Halka sa gala kharab hai, khaansi nahi hai.\nDoctor: Theek hai, temperature check karte hain. 100.8 F hai. BP normal hai, 118/76. Yeh viral fever lag raha hai.\nPatient: Kitne din lagenge thik hone mein?\nDoctor: Teen se paanch din mein theek ho jaayega. Paracetamol dijiyega bukhar ke liye aur aaram kariye, paani zyada piyiye.",
         soapNote: {
@@ -91,6 +98,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
 
   // Dr. Kavita Iyer — Cardiology — Tamil — Chennai
   "doc-3": {
+    doctorName: "Dr. Kavita Iyer",
     specialty: "cardiology",
     language: "ta",
     sessions: [
@@ -100,6 +108,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["ta"],
         outputLanguage: "en",
         duration: 480,
+        patientEmail: DEMO_PATIENT_EMAIL,
         transcript:
           "Doctor: Vanakkam, eppadi irukinga? BP medicine sariya edukaringala?\nPatient: Aama doctor, but sometimes forget pandren.\nDoctor: BP ippo 148/94 irukku, konjam high a irukku. Salt intake kammi pannunga.\nPatient: Sari doctor, weight um konjam kooda irukku.\nDoctor: Amlodipine dose konjam increase pannalam. Exercise pannunga, walking 30 minutes daily.",
         soapNote: {
@@ -157,6 +166,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
 
   // Dr. Rohan Verma — Pediatrics — Marathi — Pune
   "doc-4": {
+    doctorName: "Dr. Rohan Verma",
     specialty: "pediatrics",
     language: "mr",
     sessions: [
@@ -222,6 +232,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
 
   // Dr. Ananya Reddy — ENT — Telugu — Hyderabad
   "doc-5": {
+    doctorName: "Dr. Ananya Reddy",
     specialty: "ent",
     language: "te",
     sessions: [
@@ -287,6 +298,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
 
   // Dr. Vikram Nair — Dermatology — Malayalam — Kochi
   "doc-6": {
+    doctorName: "Dr. Vikram Nair",
     specialty: "dermatology",
     language: "ml",
     sessions: [
@@ -296,6 +308,7 @@ export const DOCTOR_SEEDS: Record<string, DoctorSeed> = {
         inputLanguages: ["ml"],
         outputLanguage: "en",
         duration: 260,
+        patientEmail: DEMO_PATIENT_EMAIL,
         transcript:
           "Doctor: Namaskaram, mukhathe pimples enthanu avastha?\nPatient: Doctor, konnu improve aayi but chila new pimples varunnu.\nDoctor: Face examine cheyyam. Redness kurayunnund, but chila active lesions undu.\nPatient: Medicine continue cheyyano doctor?\nDoctor: Cream continue cheyyu, but strength kurachu maattaam side effects ozhivakkan.",
         soapNote: {
