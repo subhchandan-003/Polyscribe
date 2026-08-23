@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { RotateCcw, Loader2, History, CheckCircle2, SlidersHorizontal } from "lucide-react";
 import { LanguageSelector, type LanguageConfig } from "@/components/language-selector";
+import { DocumentUpload } from "@/components/document-upload";
 import { saveSession, type Session } from "@/lib/sessions";
 import type { Specialty } from "@/lib/specialty-prompts";
 import type { SOAPNote } from "@/lib/claude";
@@ -59,6 +60,7 @@ export default function Home() {
   const [specialty, setSpecialty] = useState<Specialty>("general");
   const [saved, setSaved] = useState(false);
   const [consented, setConsented] = useState(false);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const recordingStartRef = useRef<number>(0);
 
   // Hospitals mode: every doctor has one fixed specialty they can't
@@ -149,7 +151,7 @@ export default function Home() {
           ? Math.round((Date.now() - recordingStartRef.current) / 1000)
           : undefined;
         if (user) {
-          saveSession(user.id, {
+          const savedSession = saveSession(user.id, {
             specialty: effectiveSpecialty,
             inputLanguages: langConfig.inputLanguages,
             outputLanguage: langConfig.outputLanguage,
@@ -159,6 +161,7 @@ export default function Home() {
             doctorId: user.id,
             doctorName: user.name,
           });
+          setCurrentSessionId(savedSession.id);
         }
         setSaved(true);
       } catch (err) {
@@ -187,6 +190,7 @@ export default function Home() {
     setError(null);
     setSaved(false);
     setConsented(false);
+    setCurrentSessionId(null);
   };
 
   const handleLoadSession = (session: Session) => {
@@ -198,6 +202,7 @@ export default function Home() {
       outputLanguage: session.outputLanguage,
     });
     setSaved(true);
+    setCurrentSessionId(session.id);
     setPage("home");
     setAppState("done");
   };
@@ -471,6 +476,17 @@ export default function Home() {
                     />
                   </Card>
                 </div>
+
+                {/* Attach prescriptions/lab reports/scans once the note is
+                    finalized. Doctor-only, both Hospitals and Private
+                    Clinics — the patient side stays read-only. */}
+                {appState === "done" && user && currentSessionId && (
+                  <DocumentUpload
+                    key={currentSessionId}
+                    userId={user.id}
+                    sessionId={currentSessionId}
+                  />
+                )}
               </div>
             )}
 

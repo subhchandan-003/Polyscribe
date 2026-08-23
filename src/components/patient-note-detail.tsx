@@ -11,11 +11,35 @@ import {
   FileText,
   ClipboardList,
   Stethoscope as StethoscopeIcon,
+  Paperclip,
+  Image as ImageIcon,
+  File as FileIcon,
+  ExternalLink,
 } from "lucide-react";
 import { SPECIALTIES } from "@/lib/specialty-prompts";
 import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
 import { SOAP_SECTIONS, buildNotePlainText, downloadNoteTxt, printNote } from "@/lib/note-export";
-import type { Session } from "@/lib/sessions";
+import { getAttachmentBlob } from "@/lib/attachments-db";
+import type { Session, SessionAttachment } from "@/lib/sessions";
+
+const ATTACHMENT_CATEGORY_LABELS: Record<SessionAttachment["category"], string> = {
+  prescription: "Prescription",
+  "lab-report": "Lab Report",
+  scan: "Scan / Imaging",
+  other: "Other",
+};
+
+function iconForAttachmentType(type: string) {
+  if (type.startsWith("image/")) return ImageIcon;
+  if (type === "application/pdf") return FileText;
+  return FileIcon;
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 interface PatientNoteDetailProps {
   session: Session;
@@ -52,6 +76,22 @@ export function PatientNoteDetail({ session, onClose }: PatientNoteDetailProps) 
     await navigator.clipboard.writeText(buildNotePlainText(session.soapNote));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleViewAttachment = async (attachment: SessionAttachment) => {
+    const blob = await getAttachmentBlob(attachment.id);
+    if (!blob) return;
+    // An anchor click opens a blob: URL far more reliably across
+    // browsers than window.open(), which can silently fail to resolve
+    // the blob in the new tab.
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
   };
 
   return (
@@ -133,6 +173,41 @@ export function PatientNoteDetail({ session, onClose }: PatientNoteDetailProps) 
                 </p>
               </div>
             ))}
+
+            {/* Documents the doctor attached — read-only here, patients
+                can't upload or remove anything. */}
+            {session.attachments && session.attachments.length > 0 && (
+              <div className="pl-3.5">
+                <h3 className="text-xs font-bold uppercase tracking-wide mb-2 text-muted-foreground flex items-center gap-1.5">
+                  <Paperclip className="h-3 w-3" />
+                  Attached Documents
+                </h3>
+                <div className="space-y-2">
+                  {session.attachments.map((a) => {
+                    const Icon = iconForAttachmentType(a.type);
+                    return (
+                      <button
+                        key={a.id}
+                        type="button"
+                        onClick={() => handleViewAttachment(a)}
+                        className="w-full flex items-center gap-3 rounded-2xl p-3 bg-muted/40 hover:bg-muted/70 transition-colors duration-300 cursor-pointer text-left"
+                      >
+                        <div className="h-9 w-9 rounded-xl bg-accent text-primary flex items-center justify-center shrink-0">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-foreground truncate">{a.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {ATTACHMENT_CATEGORY_LABELS[a.category]} · {formatBytes(a.size)}
+                          </p>
+                        </div>
+                        <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Footer actions */}

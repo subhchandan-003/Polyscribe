@@ -2,6 +2,15 @@ import type { SOAPNote } from "@/lib/claude";
 import type { Specialty } from "@/lib/specialty-prompts";
 import { getDoctorSeed, DOCTOR_SEEDS } from "@/lib/seed-sessions";
 
+export interface SessionAttachment {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  category: "prescription" | "lab-report" | "scan" | "other";
+  uploadedAt: number;
+}
+
 export interface Session {
   id: string;
   timestamp: number;
@@ -18,6 +27,11 @@ export interface Session {
   /** Set when a doctor shares this note with a patient account, see
    * shareSessionWithPatient(). Lets the patient portal find it. */
   patientEmail?: string;
+  /** Prescriptions, lab reports, and scans the doctor attached to this
+   * consultation. Metadata only — the file content lives in IndexedDB,
+   * see attachments-db.ts. Doctor-uploaded only; the patient side is
+   * read-only. */
+  attachments?: SessionAttachment[];
 }
 
 const SESSIONS_PREFIX = "polyscribe_sessions_";
@@ -107,6 +121,37 @@ export function deleteSession(userId: string, id: string): void {
 export function clearSessions(userId: string): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem(storageKey(userId));
+}
+
+/** Attaches a doctor-uploaded document (prescription, lab report, scan)
+ * to a session. Call after the file's binary content has already been
+ * saved to IndexedDB (see attachments-db.ts) — this only stores the
+ * metadata alongside the session. */
+export function addAttachment(
+  userId: string,
+  sessionId: string,
+  attachment: SessionAttachment
+): boolean {
+  const sessions = readSessions(userId);
+  const idx = sessions.findIndex((s) => s.id === sessionId);
+  if (idx === -1) return false;
+  sessions[idx] = {
+    ...sessions[idx],
+    attachments: [...(sessions[idx].attachments ?? []), attachment],
+  };
+  writeSessions(userId, sessions);
+  return true;
+}
+
+export function removeAttachment(userId: string, sessionId: string, attachmentId: string): void {
+  const sessions = readSessions(userId);
+  const idx = sessions.findIndex((s) => s.id === sessionId);
+  if (idx === -1) return;
+  sessions[idx] = {
+    ...sessions[idx],
+    attachments: (sessions[idx].attachments ?? []).filter((a) => a.id !== attachmentId),
+  };
+  writeSessions(userId, sessions);
 }
 
 /** Shares a saved session with a patient account by email, so it shows
