@@ -22,8 +22,14 @@ export interface Session {
 
 const SESSIONS_PREFIX = "polyscribe_sessions_";
 const SEEDED_FLAG_PREFIX = "polyscribe_sessions_seeded_";
+/** Bump this whenever DOCTOR_SEEDS content changes meaningfully, so
+ * browsers that already seeded under an older shape pick up the new
+ * data instead of being stuck with whatever was there on first login. */
+const SEED_VERSION = "2";
+const SEED_VERSION_PREFIX = "polyscribe_sessions_seed_version_";
 const storageKey = (userId: string) => `${SESSIONS_PREFIX}${userId}`;
 const seededFlagKey = (userId: string) => `${SEEDED_FLAG_PREFIX}${userId}`;
+const seedVersionKey = (userId: string) => `${SEED_VERSION_PREFIX}${userId}`;
 
 function readSessions(userId: string): Session[] {
   if (typeof window === "undefined") return [];
@@ -40,32 +46,32 @@ function writeSessions(userId: string, sessions: Session[]): void {
   localStorage.setItem(storageKey(userId), JSON.stringify(sessions));
 }
 
-/** Seeds a quick-login doctor's history with starter sessions matching
- * their specialty and consulting language, but only once, and only if
- * they have no sessions yet — so it never clobbers real recordings or
- * re-appears after the user deletes everything on purpose. */
+/** Seeds a directory doctor's history with starter sessions matching
+ * their specialty and consulting language. Gated by SEED_VERSION rather
+ * than a plain one-time flag: these are fixed demo accounts (no
+ * signup), so when the seed data itself changes we want every browser
+ * that already visited an account to pick up the new caseload instead
+ * of being stuck with whatever it saw on first login. */
 function ensureSeeded(userId: string): void {
   if (typeof window === "undefined") return;
-  if (localStorage.getItem(seededFlagKey(userId))) return;
+  if (localStorage.getItem(seedVersionKey(userId)) === SEED_VERSION) return;
 
   const seed = getDoctorSeed(userId);
   if (seed) {
-    const existing = readSessions(userId);
-    if (existing.length === 0) {
-      const now = Date.now();
-      const seeded: Session[] = seed.sessions
-        .map(({ daysAgo, ...rest }) => ({
-          ...rest,
-          id: crypto.randomUUID(),
-          timestamp: now - daysAgo * 24 * 60 * 60 * 1000,
-          doctorId: userId,
-          doctorName: seed.doctorName,
-        }))
-        .sort((a, b) => b.timestamp - a.timestamp);
-      writeSessions(userId, seeded);
-    }
+    const now = Date.now();
+    const seeded: Session[] = seed.sessions
+      .map(({ daysAgo, ...rest }) => ({
+        ...rest,
+        id: crypto.randomUUID(),
+        timestamp: now - daysAgo * 24 * 60 * 60 * 1000,
+        doctorId: userId,
+        doctorName: seed.doctorName,
+      }))
+      .sort((a, b) => b.timestamp - a.timestamp);
+    writeSessions(userId, seeded);
   }
   localStorage.setItem(seededFlagKey(userId), "1");
+  localStorage.setItem(seedVersionKey(userId), SEED_VERSION);
 }
 
 export function saveSession(
