@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { AuthProvider } from "@/lib/auth-context";
+import { AppModeProvider } from "@/lib/app-mode";
 import { ErrorBoundary } from "@/components/error-boundary";
 import "./globals.css";
 
@@ -37,7 +38,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <ErrorBoundary>
-          <AuthProvider>{children}</AuthProvider>
+          <AppModeProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </AppModeProvider>
         </ErrorBoundary>
       </body>
     </html>

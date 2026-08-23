@@ -7,6 +7,7 @@ import {
   History,
   Sparkles,
   BarChart3,
+  Users,
   CreditCard,
   Presentation,
   Plus,
@@ -22,6 +23,7 @@ interface CommandPaletteProps {
   onOpenChange: (open: boolean) => void;
   onNavigate: (key: NavKey) => void;
   onNewConsultation: () => void;
+  showPatients?: boolean;
 }
 
 interface Action {
@@ -32,7 +34,7 @@ interface Action {
   run: () => void;
 }
 
-export function CommandPalette({ open, onOpenChange, onNavigate, onNewConsultation }: CommandPaletteProps) {
+export function CommandPalette({ open, onOpenChange, onNavigate, onNewConsultation, showPatients = false }: CommandPaletteProps) {
   const { logout } = useAuth();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -42,6 +44,9 @@ export function CommandPalette({ open, onOpenChange, onNavigate, onNewConsultati
     () => [
       { id: "new", label: "New Consultation", group: "Action", icon: Plus, run: onNewConsultation },
       { id: "console", label: "Go to Console", group: "Navigate", icon: Stethoscope, run: () => onNavigate("console") },
+      ...(showPatients
+        ? [{ id: "patients", label: "Go to Patients", group: "Navigate", icon: Users, run: () => onNavigate("patients") }]
+        : []),
       { id: "history", label: "Go to Session History", group: "Navigate", icon: History, run: () => onNavigate("history") },
       { id: "demo", label: "Go to Try Demo", group: "Navigate", icon: Sparkles, run: () => onNavigate("demo") },
       { id: "dashboard", label: "Go to Dashboard", group: "Navigate", icon: BarChart3, run: () => onNavigate("dashboard") },
@@ -49,7 +54,7 @@ export function CommandPalette({ open, onOpenChange, onNavigate, onNewConsultati
       { id: "pitch", label: "Go to Pitch", group: "Navigate", icon: Presentation, run: () => onNavigate("pitch") },
       { id: "logout", label: "Log Out", group: "Action", icon: LogOut, run: logout },
     ],
-    [onNavigate, onNewConsultation, logout]
+    [onNavigate, onNewConsultation, logout, showPatients]
   );
 
   const filtered = useMemo(() => {

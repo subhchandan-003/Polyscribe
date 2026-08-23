@@ -181,3 +181,12 @@ export function useAuth() {
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }
+
+/** Looks up a demo account's display name by email, for places that only
+ * have a patientEmail on hand (e.g. a doctor's shared-session list) and
+ * want to show a human name instead of the raw address. */
+export function getUserNameByEmail(email: string): string | undefined {
+  return DEMO_USERS.find(
+    (u) => u.email.toLowerCase() === email.trim().toLowerCase()
+  )?.name;
+}

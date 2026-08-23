@@ -7,6 +7,7 @@ import {
   History,
   Sparkles,
   BarChart3,
+  Users,
   Plus,
   LogOut,
   Search,
@@ -24,24 +25,37 @@ export type NavKey =
   | "demo"
   | "dashboard"
   | "pricing"
-  | "pitch";
+  | "pitch"
+  | "patients";
 
 interface CommandBarProps {
   active: NavKey;
   onNavigate: (key: NavKey) => void;
   onNewConsultation: () => void;
+  /** Launch Product mode: doctors get direct access to their patients'
+   * records, so show an extra nav tab for it. */
+  showPatients?: boolean;
 }
 
-const TABS: { key: NavKey; label: string; icon: typeof Stethoscope }[] = [
+const BASE_TABS: { key: NavKey; label: string; icon: typeof Stethoscope }[] = [
   { key: "console", label: "Console", icon: Stethoscope },
   { key: "history", label: "History", icon: History },
   { key: "demo", label: "Demo", icon: Sparkles },
   { key: "dashboard", label: "Stats", icon: BarChart3 },
 ];
 
-export function CommandBar({ active, onNavigate, onNewConsultation }: CommandBarProps) {
+const PATIENTS_TAB: { key: NavKey; label: string; icon: typeof Stethoscope } = {
+  key: "patients",
+  label: "Patients",
+  icon: Users,
+};
+
+export function CommandBar({ active, onNavigate, onNewConsultation, showPatients = false }: CommandBarProps) {
   const { user, logout } = useAuth();
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const tabs = showPatients
+    ? [BASE_TABS[0], PATIENTS_TAB, ...BASE_TABS.slice(1)]
+    : BASE_TABS;
 
   return (
     <>
@@ -62,7 +76,7 @@ export function CommandBar({ active, onNavigate, onNewConsultation }: CommandBar
 
           {/* Tabs: desktop only, palette covers everything on mobile */}
           <nav className="hidden md:flex items-center h-full gap-1.5">
-            {TABS.map((tab) => {
+            {tabs.map((tab) => {
               const isActive = active === tab.key;
               return (
                 <button
@@ -141,6 +155,7 @@ export function CommandBar({ active, onNavigate, onNewConsultation }: CommandBar
         onOpenChange={setPaletteOpen}
         onNavigate={onNavigate}
         onNewConsultation={onNewConsultation}
+        showPatients={showPatients}
       />
     </>
   );

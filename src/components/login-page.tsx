@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "@/lib/auth-context";
+import { useAppMode, type AppMode } from "@/lib/app-mode";
 import { SPECIALTIES, type Specialty } from "@/lib/specialty-prompts";
 import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
+import { DOCTOR_DIRECTORY } from "@/lib/doctor-directory";
 import { Avatar } from "@/components/ui/avatar";
 import {
   Stethoscope,
@@ -16,6 +18,10 @@ import {
   Sparkles,
   Activity,
   Zap,
+  FlaskConical,
+  Rocket,
+  Users,
+  Check,
 } from "lucide-react";
 
 type Tab = "doctor" | "patient";
@@ -81,6 +87,7 @@ function TraceLine() {
 
 export function LoginPage() {
   const { login } = useAuth();
+  const { mode, setMode } = useAppMode();
   const [tab, setTab] = useState<Tab>("doctor");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -88,7 +95,18 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isDoctor = tab === "doctor";
+  const isLaunch = mode === "launch";
+  const isDoctor = isLaunch ? true : tab === "doctor";
+
+  const handleModeSwitch = (next: AppMode) => {
+    setMode(next);
+    if (next === "launch") handleTabSwitch("doctor");
+  };
+
+  const handleDirectoryPick = (doctorEmail: string) => {
+    setEmail(doctorEmail);
+    setError(null);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,6 +161,28 @@ export function LoginPage() {
       <div className="gradient-mesh" />
       <div className="gradient-mesh-blob-3" />
 
+      {/* ── Mode toggle ── */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center p-1 rounded-full glass gap-1">
+        {(["beta", "launch"] as AppMode[]).map((m) => {
+          const active = mode === m;
+          return (
+            <button
+              key={m}
+              type="button"
+              onClick={() => handleModeSwitch(m)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap ${
+                active
+                  ? "bg-gradient-brand text-primary-foreground shadow-sm shadow-teal-500/25"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {m === "beta" ? <FlaskConical className="h-3.5 w-3.5" /> : <Rocket className="h-3.5 w-3.5" />}
+              <span className="hidden sm:inline">{m === "beta" ? "Beta Testing" : "Launch Product"}</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* ── Page header ── */}
       <motion.div
         initial={{ opacity: 0, y: -16 }}
@@ -179,34 +219,41 @@ export function LoginPage() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           className="w-full max-w-md rounded-3xl glass-strong overflow-hidden mx-auto lg:mx-0 flex flex-col"
         >
-          {/* ── Tabs ── */}
-          <div className="flex gap-1.5 p-2">
-            {(["doctor", "patient"] as Tab[]).map((t) => {
-              const active = tab === t;
-              const Icon = t === "doctor" ? Stethoscope : Heart;
-              return (
-                <button
-                  key={t}
-                  onClick={() => handleTabSwitch(t)}
-                  className={`relative flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-semibold cursor-pointer transition-colors duration-300 ${
-                    active
-                      ? "text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {active && (
-                    <motion.div
-                      layoutId="login-tab-bg"
-                      className="absolute inset-0 rounded-2xl bg-gradient-brand shadow-md shadow-teal-500/25"
-                      transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                    />
-                  )}
-                  <Icon className="h-4 w-4 relative z-10" />
-                  <span className="relative z-10">{t === "doctor" ? "Doctor Login" : "Patient Login"}</span>
-                </button>
-              );
-            })}
-          </div>
+          {/* ── Tabs — doctor-only in Launch Product mode, no patient login ── */}
+          {isLaunch ? (
+            <div className="flex items-center gap-2 p-4 pb-2 text-primary">
+              <Stethoscope className="h-4 w-4" />
+              <span className="text-sm font-semibold">Doctor Login</span>
+            </div>
+          ) : (
+            <div className="flex gap-1.5 p-2">
+              {(["doctor", "patient"] as Tab[]).map((t) => {
+                const active = tab === t;
+                const Icon = t === "doctor" ? Stethoscope : Heart;
+                return (
+                  <button
+                    key={t}
+                    onClick={() => handleTabSwitch(t)}
+                    className={`relative flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-semibold cursor-pointer transition-colors duration-300 ${
+                      active
+                        ? "text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {active && (
+                      <motion.div
+                        layoutId="login-tab-bg"
+                        className="absolute inset-0 rounded-2xl bg-gradient-brand shadow-md shadow-teal-500/25"
+                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                      />
+                    )}
+                    <Icon className="h-4 w-4 relative z-10" />
+                    <span className="relative z-10">{t === "doctor" ? "Doctor Login" : "Patient Login"}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* ── Form ── */}
           <AnimatePresence mode="wait">
@@ -300,16 +347,18 @@ export function LoginPage() {
                   card, so both login panels match the quick-login panel's
                   height instead of leaving an awkward gap or falling short. */}
               <div className="mt-auto space-y-4">
-                <div className="pt-1 border-t border-border/60">
-                  <button
-                    type="button"
-                    onClick={fillDemo}
-                    className="w-full text-xs font-medium text-muted-foreground py-2.5 hover:text-primary transition-colors cursor-pointer flex items-center justify-center gap-1.5"
-                  >
-                    <Sparkles className="h-3.5 w-3.5" />
-                    Use demo {tab} credentials
-                  </button>
-                </div>
+                {!isLaunch && (
+                  <div className="pt-1 border-t border-border/60">
+                    <button
+                      type="button"
+                      onClick={fillDemo}
+                      className="w-full text-xs font-medium text-muted-foreground py-2.5 hover:text-primary transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Use demo {tab} credentials
+                    </button>
+                  </div>
+                )}
 
                 <p className="text-[11px] text-center text-muted-foreground/80 flex items-center justify-center gap-1.5">
                   <Lock className="h-3 w-3" />
@@ -320,74 +369,121 @@ export function LoginPage() {
           </AnimatePresence>
         </motion.div>
 
-        {/* ── Quick login: five demo accounts per portal, one tap to sign in ── */}
+        {/* ── Right panel: Doctor Directory in Launch mode, Quick Login in Beta mode ── */}
         <AnimatePresence mode="wait">
-          <motion.div
-            key={tab}
-            initial={{ opacity: 0, y: 24, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 12 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-            className="w-full max-w-md rounded-3xl glass-strong overflow-hidden p-6 flex flex-col"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <Zap className="h-4 w-4 text-primary" />
-              <h3 className="font-heading text-base font-bold text-foreground">Quick Login</h3>
-            </div>
-            <p className="text-xs text-muted-foreground mb-4">
-              {isDoctor
-                ? "Jump straight in as one of five demo doctors, each with their own specialty, language, and consultation history."
-                : "Jump straight in as one of five demo patients, each with their own care team and shared consultation history."}
-            </p>
+          {isLaunch ? (
+            <motion.div
+              key="directory"
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+              className="w-full max-w-md rounded-3xl glass-strong overflow-hidden p-6 flex flex-col"
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <Users className="h-4 w-4 text-primary" />
+                <h3 className="font-heading text-base font-bold text-foreground">Doctor Directory</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">
+                Select your name to fill in your work email, then enter your own password to sign in.
+              </p>
 
-            <div className="space-y-2 my-auto">
-              {isDoctor
-                ? QUICK_LOGIN_DOCTORS.map((doctor) => {
-                    const Icon = SPECIALTY_ICONS[doctor.specialty];
-                    const colors = SPECIALTY_COLORS[doctor.specialty];
-                    const specialtyLabel =
-                      SPECIALTIES.find((s) => s.id === doctor.specialty)?.label ?? doctor.specialty;
-                    return (
+              <div className="space-y-2 my-auto max-h-[420px] overflow-y-auto pr-1">
+                {DOCTOR_DIRECTORY.map((doc) => {
+                  const Icon = SPECIALTY_ICONS[doc.specialty];
+                  const colors = SPECIALTY_COLORS[doc.specialty];
+                  const specialtyLabel = SPECIALTIES.find((s) => s.id === doc.specialty)?.label ?? doc.specialty;
+                  const selected = email.trim().toLowerCase() === doc.email;
+                  return (
+                    <button
+                      key={doc.id}
+                      type="button"
+                      onClick={() => handleDirectoryPick(doc.email)}
+                      className={`w-full flex items-center gap-3 rounded-2xl p-3 text-left transition-colors duration-300 cursor-pointer ${
+                        selected ? "bg-accent ring-2 ring-primary/30" : "hover:bg-muted/60"
+                      }`}
+                    >
+                      <div className={`h-10 w-10 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center shrink-0`}>
+                        <Icon className="h-4.5 w-4.5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-foreground truncate">{doc.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{specialtyLabel}</p>
+                      </div>
+                      {selected && <Check className="h-4 w-4 text-primary shrink-0" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={tab}
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+              className="w-full max-w-md rounded-3xl glass-strong overflow-hidden p-6 flex flex-col"
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <Zap className="h-4 w-4 text-primary" />
+                <h3 className="font-heading text-base font-bold text-foreground">Quick Login</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">
+                {isDoctor
+                  ? "Jump straight in as one of five demo doctors, each with their own specialty, language, and consultation history."
+                  : "Jump straight in as one of five demo patients, each with their own care team and shared consultation history."}
+              </p>
+
+              <div className="space-y-2 my-auto">
+                {isDoctor
+                  ? QUICK_LOGIN_DOCTORS.map((doctor) => {
+                      const Icon = SPECIALTY_ICONS[doctor.specialty];
+                      const colors = SPECIALTY_COLORS[doctor.specialty];
+                      const specialtyLabel =
+                        SPECIALTIES.find((s) => s.id === doctor.specialty)?.label ?? doctor.specialty;
+                      return (
+                        <button
+                          key={doctor.email}
+                          type="button"
+                          onClick={() => handleQuickLogin(doctor)}
+                          disabled={isSubmitting}
+                          className="w-full flex items-center gap-3 rounded-2xl p-3 text-left hover:bg-muted/60 transition-colors duration-300 cursor-pointer disabled:opacity-60"
+                        >
+                          <div className={`h-10 w-10 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center shrink-0`}>
+                            <Icon className="h-4.5 w-4.5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-foreground truncate">{doctor.name}</p>
+                            <p className="text-xs text-muted-foreground truncate">{specialtyLabel}</p>
+                          </div>
+                          <span className="text-xs font-medium text-primary rounded-full bg-accent px-2.5 py-1 shrink-0">
+                            {doctor.language}
+                          </span>
+                        </button>
+                      );
+                    })
+                  : QUICK_LOGIN_PATIENTS.map((patient) => (
                       <button
-                        key={doctor.email}
+                        key={patient.email}
                         type="button"
-                        onClick={() => handleQuickLogin(doctor)}
+                        onClick={() => handleQuickLogin(patient)}
                         disabled={isSubmitting}
                         className="w-full flex items-center gap-3 rounded-2xl p-3 text-left hover:bg-muted/60 transition-colors duration-300 cursor-pointer disabled:opacity-60"
                       >
-                        <div className={`h-10 w-10 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center shrink-0`}>
-                          <Icon className="h-4.5 w-4.5" />
-                        </div>
+                        <Avatar name={patient.name} />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-foreground truncate">{doctor.name}</p>
-                          <p className="text-xs text-muted-foreground truncate">{specialtyLabel}</p>
+                          <p className="text-sm font-semibold text-foreground truncate">{patient.name}</p>
+                          <p className="text-xs text-muted-foreground truncate">{patient.focus}</p>
                         </div>
                         <span className="text-xs font-medium text-primary rounded-full bg-accent px-2.5 py-1 shrink-0">
-                          {doctor.language}
+                          {patient.visits} visits
                         </span>
                       </button>
-                    );
-                  })
-                : QUICK_LOGIN_PATIENTS.map((patient) => (
-                    <button
-                      key={patient.email}
-                      type="button"
-                      onClick={() => handleQuickLogin(patient)}
-                      disabled={isSubmitting}
-                      className="w-full flex items-center gap-3 rounded-2xl p-3 text-left hover:bg-muted/60 transition-colors duration-300 cursor-pointer disabled:opacity-60"
-                    >
-                      <Avatar name={patient.name} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-foreground truncate">{patient.name}</p>
-                        <p className="text-xs text-muted-foreground truncate">{patient.focus}</p>
-                      </div>
-                      <span className="text-xs font-medium text-primary rounded-full bg-accent px-2.5 py-1 shrink-0">
-                        {patient.visits} visits
-                      </span>
-                    </button>
-                  ))}
-            </div>
-          </motion.div>
+                    ))}
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
 

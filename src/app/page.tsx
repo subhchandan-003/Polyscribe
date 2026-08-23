@@ -2,8 +2,11 @@
 
 import { useState, useCallback, useRef } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { useAppMode } from "@/lib/app-mode";
+import { DOCTOR_SPECIALTY } from "@/lib/doctor-directory";
 import { LoginPage } from "@/components/login-page";
 import { PatientDashboard } from "@/components/patient-dashboard";
+import { DoctorPatientsPage } from "@/components/doctor-patients";
 import { CommandBar, type NavKey } from "@/components/command-bar";
 import { Recorder } from "@/components/recorder";
 import { TranscriptPanel } from "@/components/transcript-panel";
@@ -37,7 +40,7 @@ type AppState =
   | "history"
   | "demo";
 
-type Page = "home" | "pricing" | "dashboard" | "pitch";
+type Page = "home" | "pricing" | "dashboard" | "pitch" | "patients";
 
 const DEFAULT_LANG_CONFIG: LanguageConfig = {
   inputLanguages: ["en"],
@@ -46,6 +49,7 @@ const DEFAULT_LANG_CONFIG: LanguageConfig = {
 
 export default function Home() {
   const { user, isLoading } = useAuth();
+  const { mode } = useAppMode();
   const [page, setPage] = useState<Page>("home");
   const [appState, setAppState] = useState<AppState>("idle");
   const [transcript, setTranscript] = useState<string | null>(null);
@@ -56,6 +60,13 @@ export default function Home() {
   const [saved, setSaved] = useState(false);
   const [consented, setConsented] = useState(false);
   const recordingStartRef = useRef<number>(0);
+
+  // Launch Product mode: every doctor has one fixed specialty they can't
+  // change, sourced from the same directory used on the login screen.
+  const isLaunch = mode === "launch";
+  const lockedSpecialty =
+    isLaunch && user ? DOCTOR_SPECIALTY[user.id] : undefined;
+  const effectiveSpecialty = lockedSpecialty ?? specialty;
 
   const processRecording = useCallback(
     async (rawText: string, audioBlob: Blob | null) => {
@@ -120,7 +131,7 @@ export default function Home() {
           body: JSON.stringify({
             transcript: rawTranscript,
             outputLanguage: langConfig.outputLanguage,
-            specialty,
+            specialty: effectiveSpecialty,
           }),
         });
 
@@ -139,7 +150,7 @@ export default function Home() {
           : undefined;
         if (user) {
           saveSession(user.id, {
-            specialty,
+            specialty: effectiveSpecialty,
             inputLanguages: langConfig.inputLanguages,
             outputLanguage: langConfig.outputLanguage,
             transcript: rawTranscript,
@@ -161,7 +172,7 @@ export default function Home() {
         setAppState("error");
       }
     },
-    [langConfig, specialty, user]
+    [langConfig, effectiveSpecialty, user]
   );
 
   const handleRecordingStart = useCallback(() => {
@@ -198,11 +209,13 @@ export default function Home() {
         ? "pricing"
         : page === "pitch"
           ? "pitch"
-          : appState === "history"
-            ? "history"
-            : appState === "demo"
-              ? "demo"
-              : "console";
+          : page === "patients"
+            ? "patients"
+            : appState === "history"
+              ? "history"
+              : appState === "demo"
+                ? "demo"
+                : "console";
 
   const handleNav = (key: NavKey) => {
     switch (key) {
@@ -226,6 +239,9 @@ export default function Home() {
         break;
       case "pitch":
         setPage("pitch");
+        break;
+      case "patients":
+        setPage("patients");
         break;
     }
   };
@@ -269,7 +285,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen overflow-hidden relative">
       <div className="gradient-mesh" />
-      <CommandBar active={activeNav} onNavigate={handleNav} onNewConsultation={handleNewSession} />
+      <CommandBar active={activeNav} onNavigate={handleNav} onNewConsultation={handleNewSession} showPatients={isLaunch} />
 
       <div className="flex-1 overflow-y-auto">
         {/* Business layer pages */}
@@ -288,6 +304,12 @@ export default function Home() {
         {page === "pitch" && (
           <div className="max-w-4xl mx-auto w-full px-6 lg:px-10 py-8">
             <PitchPage onBack={() => setPage("home")} />
+          </div>
+        )}
+
+        {page === "patients" && (
+          <div className="max-w-5xl mx-auto w-full px-6 lg:px-10 py-8">
+            <DoctorPatientsPage onBack={() => setPage("home")} />
           </div>
         )}
 
@@ -376,7 +398,11 @@ export default function Home() {
                         <h3 className="font-heading text-sm font-bold">Consultation Setup</h3>
                       </div>
                       <div className="space-y-5">
-                        <SpecialtySelector value={specialty} onChange={setSpecialty} />
+                        <SpecialtySelector
+                          value={effectiveSpecialty}
+                          onChange={setSpecialty}
+                          locked={Boolean(lockedSpecialty)}
+                        />
                         <Separator className="bg-border/60" />
                         <LanguageSelector config={langConfig} onChange={setLangConfig} />
                       </div>
