@@ -72,7 +72,7 @@ export function DoctorPatientsPage({ onBack }: DoctorPatientsPageProps) {
                 {selectedPatient?.name ?? selectedEmail}
               </h2>
               <p className="text-sm text-muted-foreground mt-0.5">
-                {patientSessions.length} consultation{patientSessions.length !== 1 ? "s" : ""} on record
+                {`${patientSessions.length} consultation${patientSessions.length !== 1 ? "s" : ""} on record`}
               </p>
             </div>
           </div>
@@ -142,7 +142,7 @@ export function DoctorPatientsPage({ onBack }: DoctorPatientsPageProps) {
             Patients
           </h2>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {patients.length} patient{patients.length !== 1 ? "s" : ""} you&apos;ve shared notes with
+            {`${patients.length} patient${patients.length !== 1 ? "s" : ""} you’ve shared notes with`}
           </p>
         </div>
       </div>
@@ -170,7 +170,7 @@ export function DoctorPatientsPage({ onBack }: DoctorPatientsPageProps) {
                   <p className="text-xs text-muted-foreground truncate">{p.email}</p>
                 </div>
                 <span className="text-xs font-medium text-primary rounded-full bg-accent px-2.5 py-1 shrink-0">
-                  {p.sharedByMe} note{p.sharedByMe !== 1 ? "s" : ""}
+                  {`${p.sharedByMe} note${p.sharedByMe !== 1 ? "s" : ""}`}
                 </span>
                 <ChevronRight className="h-4 w-4 text-muted-foreground/50 shrink-0" />
               </div>

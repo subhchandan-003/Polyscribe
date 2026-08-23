@@ -134,7 +134,7 @@ export function SessionHistory({ onLoadSession, onBack }: SessionHistoryProps) {
             Session History
           </h2>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {sessions.length} consultation{sessions.length !== 1 ? "s" : ""} saved locally
+            {`${sessions.length} consultation${sessions.length !== 1 ? "s" : ""} saved locally`}
           </p>
         </div>
       </div>
