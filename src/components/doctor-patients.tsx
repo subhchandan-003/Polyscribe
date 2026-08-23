@@ -118,7 +118,11 @@ export function DoctorPatientsPage({ onBack }: DoctorPatientsPageProps) {
         )}
 
         {activeSession && (
-          <PatientNoteDetail session={activeSession} onClose={() => setActiveSession(null)} />
+          <PatientNoteDetail
+            session={activeSession}
+            onClose={() => setActiveSession(null)}
+            uploaderDoctorId={activeSession.doctorId ?? user?.id}
+          />
         )}
       </div>
     );

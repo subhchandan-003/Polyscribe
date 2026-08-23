@@ -20,6 +20,7 @@ import { SPECIALTIES } from "@/lib/specialty-prompts";
 import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
 import { SOAP_SECTIONS, buildNotePlainText, downloadNoteTxt, printNote } from "@/lib/note-export";
 import { getAttachmentBlob } from "@/lib/attachments-db";
+import { DocumentUpload } from "@/components/document-upload";
 import type { Session, SessionAttachment } from "@/lib/sessions";
 
 const ATTACHMENT_CATEGORY_LABELS: Record<SessionAttachment["category"], string> = {
@@ -44,6 +45,13 @@ function formatBytes(bytes: number): string {
 interface PatientNoteDetailProps {
   session: Session;
   onClose: () => void;
+  /** Set this to the id of the doctor whose storage the session lives
+   * under (usually session.doctorId) to let a doctor viewer attach
+   * documents right from this view — used wherever a doctor opens a
+   * session outside the main console (Patients tab, cross-doctor
+   * records). Left unset for the patient's own portal, which stays
+   * strictly read-only. */
+  uploaderDoctorId?: string;
 }
 
 /* Friendlier reframing of the six SOAP sections for a patient audience,
@@ -57,7 +65,7 @@ const PLAIN_LABELS: Record<string, string> = {
   followUp: "Follow-up",
 };
 
-export function PatientNoteDetail({ session, onClose }: PatientNoteDetailProps) {
+export function PatientNoteDetail({ session, onClose, uploaderDoctorId }: PatientNoteDetailProps) {
   const [fullNote, setFullNote] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -174,39 +182,44 @@ export function PatientNoteDetail({ session, onClose }: PatientNoteDetailProps) 
               </div>
             ))}
 
-            {/* Documents the doctor attached — read-only here, patients
-                can't upload or remove anything. */}
-            {session.attachments && session.attachments.length > 0 && (
-              <div className="pl-3.5">
-                <h3 className="text-xs font-bold uppercase tracking-wide mb-2 text-muted-foreground flex items-center gap-1.5">
-                  <Paperclip className="h-3 w-3" />
-                  Attached Documents
-                </h3>
-                <div className="space-y-2">
-                  {session.attachments.map((a) => {
-                    const Icon = iconForAttachmentType(a.type);
-                    return (
-                      <button
-                        key={a.id}
-                        type="button"
-                        onClick={() => handleViewAttachment(a)}
-                        className="w-full flex items-center gap-3 rounded-2xl p-3 bg-muted/40 hover:bg-muted/70 transition-colors duration-300 cursor-pointer text-left"
-                      >
-                        <div className="h-9 w-9 rounded-xl bg-accent text-primary flex items-center justify-center shrink-0">
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">{a.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {ATTACHMENT_CATEGORY_LABELS[a.category]} · {formatBytes(a.size)}
-                          </p>
-                        </div>
-                        <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0" />
-                      </button>
-                    );
-                  })}
+            {/* Doctor viewer (Patients tab, cross-doctor records): full
+                upload/remove access, same as the main console. Patient's
+                own portal: read-only list, no upload or remove. */}
+            {uploaderDoctorId ? (
+              <DocumentUpload userId={uploaderDoctorId} sessionId={session.id} />
+            ) : (
+              session.attachments && session.attachments.length > 0 && (
+                <div className="pl-3.5">
+                  <h3 className="text-xs font-bold uppercase tracking-wide mb-2 text-muted-foreground flex items-center gap-1.5">
+                    <Paperclip className="h-3 w-3" />
+                    Attached Documents
+                  </h3>
+                  <div className="space-y-2">
+                    {session.attachments.map((a) => {
+                      const Icon = iconForAttachmentType(a.type);
+                      return (
+                        <button
+                          key={a.id}
+                          type="button"
+                          onClick={() => handleViewAttachment(a)}
+                          className="w-full flex items-center gap-3 rounded-2xl p-3 bg-muted/40 hover:bg-muted/70 transition-colors duration-300 cursor-pointer text-left"
+                        >
+                          <div className="h-9 w-9 rounded-xl bg-accent text-primary flex items-center justify-center shrink-0">
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-foreground truncate">{a.name}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {ATTACHMENT_CATEGORY_LABELS[a.category]} · {formatBytes(a.size)}
+                            </p>
+                          </div>
+                          <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0" />
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )
             )}
           </div>
 
