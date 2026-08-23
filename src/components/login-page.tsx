@@ -18,8 +18,8 @@ import {
   Sparkles,
   Activity,
   Zap,
-  FlaskConical,
-  Rocket,
+  Building2,
+  Hospital,
   Users,
   Check,
 } from "lucide-react";
@@ -95,12 +95,12 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isLaunch = mode === "launch";
-  const isDoctor = isLaunch ? true : tab === "doctor";
+  const isHospital = mode === "hospital";
+  const isDoctor = isHospital ? true : tab === "doctor";
 
   const handleModeSwitch = (next: AppMode) => {
     setMode(next);
-    if (next === "launch") handleTabSwitch("doctor");
+    if (next === "hospital") handleTabSwitch("doctor");
   };
 
   const handleDirectoryPick = (doctor: { email: string; password: string }) => {
@@ -164,7 +164,7 @@ export function LoginPage() {
 
       {/* ── Mode toggle ── */}
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center p-1 rounded-full glass gap-1">
-        {(["beta", "launch"] as AppMode[]).map((m) => {
+        {(["clinic", "hospital"] as AppMode[]).map((m) => {
           const active = mode === m;
           return (
             <button
@@ -177,8 +177,8 @@ export function LoginPage() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {m === "beta" ? <FlaskConical className="h-3.5 w-3.5" /> : <Rocket className="h-3.5 w-3.5" />}
-              <span className="hidden sm:inline">{m === "beta" ? "Beta Testing" : "Launch Product"}</span>
+              {m === "clinic" ? <Building2 className="h-3.5 w-3.5" /> : <Hospital className="h-3.5 w-3.5" />}
+              <span className="hidden sm:inline">{m === "clinic" ? "Private Clinics" : "Hospitals"}</span>
             </button>
           );
         })}
@@ -220,8 +220,8 @@ export function LoginPage() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           className="w-full max-w-md rounded-3xl glass-strong overflow-hidden mx-auto lg:mx-0 flex flex-col"
         >
-          {/* ── Tabs — doctor-only in Launch Product mode, no patient login ── */}
-          {isLaunch ? (
+          {/* ── Tabs — doctor-only in Hospitals mode, no patient login ── */}
+          {isHospital ? (
             <div className="flex items-center gap-2 p-4 pb-2 text-primary">
               <Stethoscope className="h-4 w-4" />
               <span className="text-sm font-semibold">Doctor Login</span>
@@ -348,7 +348,7 @@ export function LoginPage() {
                   card, so both login panels match the quick-login panel's
                   height instead of leaving an awkward gap or falling short. */}
               <div className="mt-auto space-y-4">
-                {!isLaunch && (
+                {!isHospital && (
                   <div className="pt-1 border-t border-border/60">
                     <button
                       type="button"
@@ -370,9 +370,9 @@ export function LoginPage() {
           </AnimatePresence>
         </motion.div>
 
-        {/* ── Right panel: Doctor Directory in Launch mode, Quick Login in Beta mode ── */}
+        {/* ── Right panel: Hospital Directory in Hospitals mode, Quick Login in Private Clinics mode ── */}
         <AnimatePresence mode="wait">
-          {isLaunch ? (
+          {isHospital ? (
             <motion.div
               key="directory"
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
@@ -383,10 +383,10 @@ export function LoginPage() {
             >
               <div className="flex items-center gap-2 mb-1">
                 <Users className="h-4 w-4 text-primary" />
-                <h3 className="font-heading text-base font-bold text-foreground">Doctor Directory</h3>
+                <h3 className="font-heading text-base font-bold text-foreground">Hospital Directory</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-4">
-                Select your name to fill in your credentials, then confirm to sign in.
+                Select your name from the hospital roster, then confirm to sign in.
               </p>
 
               <div className="space-y-2 my-auto max-h-[420px] overflow-y-auto pr-1">
@@ -432,8 +432,8 @@ export function LoginPage() {
               </div>
               <p className="text-xs text-muted-foreground mb-4">
                 {isDoctor
-                  ? "Jump straight in as one of five demo doctors, each with their own specialty, language, and consultation history."
-                  : "Jump straight in as one of five demo patients, each with their own care team and shared consultation history."}
+                  ? "Sign in as one of five doctors at this clinic, each with their own specialty, language, and consultation history."
+                  : "Sign in as one of five patients at this clinic, each with their own care team and shared consultation history."}
               </p>
 
               <div className="space-y-2 my-auto">

@@ -61,11 +61,11 @@ export default function Home() {
   const [consented, setConsented] = useState(false);
   const recordingStartRef = useRef<number>(0);
 
-  // Launch Product mode: every doctor has one fixed specialty they can't
+  // Hospitals mode: every doctor has one fixed specialty they can't
   // change, sourced from the same directory used on the login screen.
-  const isLaunch = mode === "launch";
+  const isHospital = mode === "hospital";
   const lockedSpecialty =
-    isLaunch && user ? DOCTOR_SPECIALTY[user.id] : undefined;
+    isHospital && user ? DOCTOR_SPECIALTY[user.id] : undefined;
   const effectiveSpecialty = lockedSpecialty ?? specialty;
 
   const processRecording = useCallback(
@@ -285,7 +285,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen overflow-hidden relative">
       <div className="gradient-mesh" />
-      <CommandBar active={activeNav} onNavigate={handleNav} onNewConsultation={handleNewSession} showPatients={isLaunch} />
+      <CommandBar active={activeNav} onNavigate={handleNav} onNewConsultation={handleNewSession} showPatients={isHospital} />
 
       <div className="flex-1 overflow-y-auto">
         {/* Business layer pages */}

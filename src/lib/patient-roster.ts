@@ -4,9 +4,9 @@ export interface RosterPatient {
 }
 
 /** Pool of patient identities used to seed realistic doctor caseloads.
- * The first five are the real quick-login patient accounts (Beta mode);
- * the rest are display-only identities that populate a Launch Product
- * doctor's Patients tab, Session History, and stats without needing a
+ * The first five are the real quick-login patient accounts (Private
+ * Clinics mode); the rest are display-only identities that populate a
+ * Hospitals mode doctor's Patients tab, Session History, and stats without needing a
  * login of their own. Reused across doctors on purpose, so a patient can
  * show up in more than one doctor's caseload — the same cross-doctor
  * record aggregation getPatientSessions() already does for real users. */

@@ -32,7 +32,7 @@ interface CommandBarProps {
   active: NavKey;
   onNavigate: (key: NavKey) => void;
   onNewConsultation: () => void;
-  /** Launch Product mode: doctors get direct access to their patients'
+  /** Hospitals mode: doctors get direct access to their patients'
    * records, so show an extra nav tab for it. */
   showPatients?: boolean;
 }

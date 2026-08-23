@@ -7,7 +7,7 @@ import { SPECIALTY_ICONS, SPECIALTY_COLORS } from "@/lib/specialty-icons";
 interface SpecialtySelectorProps {
   value: Specialty;
   onChange: (specialty: Specialty) => void;
-  /** Launch Product mode: each doctor has one fixed specialty and can't
+  /** Hospitals mode: each doctor has one fixed specialty and can't
    * switch templates, so render it as a locked badge instead of a picker. */
   locked?: boolean;
 }

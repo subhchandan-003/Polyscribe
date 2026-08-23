@@ -6,13 +6,12 @@ import { buildTranscript, type SeedLang } from "@/lib/lang-style";
 import { PATIENT_ROSTER } from "@/lib/patient-roster";
 
 /**
- * Starter session history for every doctor in the Launch Product
- * directory (and the five Beta quick-login doctors, same ten accounts).
- * Each doctor gets a randomized 5-to-20 patient caseload generated from
- * a shared case bank, so a fresh directory login never looks empty.
- * Seeding is scoped to that doctor's own user id (see sessions.ts) and
- * only ever fills an empty history the first time — it never overwrites
- * real recorded sessions.
+ * Starter session history for every doctor in the Hospitals mode
+ * directory (and the five Private Clinics quick-login doctors, same
+ * ten accounts). Each doctor gets a randomized 5-to-20 patient caseload
+ * generated from a shared case bank, so a fresh directory login never
+ * looks empty. Seeding is scoped to that doctor's own user id and
+ * version-gated (see ensureSeeded in sessions.ts).
  */
 
 type SeedSession = Omit<Session, "id" | "timestamp"> & { daysAgo: number };

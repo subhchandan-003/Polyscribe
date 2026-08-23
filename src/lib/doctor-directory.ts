@@ -9,7 +9,7 @@ export interface DoctorDirectoryEntry {
 }
 
 /** Every doctor account has one fixed specialty, two doctors per
- * specialty. This is the source of truth both for the Launch Product
+ * specialty. This is the source of truth both for the Hospitals mode
  * login directory and for locking the Consultation Setup specialty
  * picker to a doctor's own specialty. */
 export const DOCTOR_DIRECTORY: DoctorDirectoryEntry[] = [

@@ -21,7 +21,7 @@ interface PatientSummary {
   sharedByMe: number;
 }
 
-/** Launch Product mode: lets a doctor go straight from their own shared
+/** Hospitals mode: lets a doctor go straight from their own shared
  * sessions to a patient's full record, reusing the same aggregation
  * (getPatientSessions) and detail view the patient portal itself uses. */
 export function DoctorPatientsPage({ onBack }: DoctorPatientsPageProps) {

@@ -8,13 +8,21 @@ import {
   type ReactNode,
 } from "react";
 
-export type AppMode = "beta" | "launch";
+/** "clinic" — Private Clinics: doctors and patients both sign in, one
+ * roster of demo accounts, notes link between them (formerly "Beta
+ * Testing"). "hospital" — Hospitals: a fixed 10-doctor directory with
+ * specialty-locked accounts and no separate patient login; doctors
+ * reach their patients' records directly (formerly "Launch Product"). */
+export type AppMode = "clinic" | "hospital";
 
 const STORAGE_KEY = "polyscribe_app_mode";
 
 function readStoredMode(): AppMode {
-  if (typeof window === "undefined") return "beta";
-  return localStorage.getItem(STORAGE_KEY) === "launch" ? "launch" : "beta";
+  if (typeof window === "undefined") return "clinic";
+  const stored = localStorage.getItem(STORAGE_KEY);
+  // Accepts the legacy "launch" value so anyone who picked it before
+  // the Hospitals/Private Clinics rename keeps their chosen mode.
+  return stored === "hospital" || stored === "launch" ? "hospital" : "clinic";
 }
 
 interface AppModeContextType {
