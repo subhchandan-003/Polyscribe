@@ -103,8 +103,9 @@ export function LoginPage() {
     if (next === "launch") handleTabSwitch("doctor");
   };
 
-  const handleDirectoryPick = (doctorEmail: string) => {
-    setEmail(doctorEmail);
+  const handleDirectoryPick = (doctor: { email: string; password: string }) => {
+    setEmail(doctor.email);
+    setPassword(doctor.password);
     setError(null);
   };
 
@@ -385,7 +386,7 @@ export function LoginPage() {
                 <h3 className="font-heading text-base font-bold text-foreground">Doctor Directory</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-4">
-                Select your name to fill in your work email, then enter your own password to sign in.
+                Select your name to fill in your credentials, then confirm to sign in.
               </p>
 
               <div className="space-y-2 my-auto max-h-[420px] overflow-y-auto pr-1">
@@ -398,7 +399,7 @@ export function LoginPage() {
                     <button
                       key={doc.id}
                       type="button"
-                      onClick={() => handleDirectoryPick(doc.email)}
+                      onClick={() => handleDirectoryPick(doc)}
                       className={`w-full flex items-center gap-3 rounded-2xl p-3 text-left transition-colors duration-300 cursor-pointer ${
                         selected ? "bg-accent ring-2 ring-primary/30" : "hover:bg-muted/60"
                       }`}
