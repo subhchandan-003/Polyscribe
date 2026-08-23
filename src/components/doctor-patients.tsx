@@ -29,16 +29,15 @@ export function DoctorPatientsPage({ onBack }: DoctorPatientsPageProps) {
   const [patients] = useState<PatientSummary[]>(() => {
     if (!user) return [];
     const mySessions = getSessions(user.id);
-    const counts = new Map<string, number>();
+    const counts = new Map<string, { count: number; name: string }>();
     mySessions.forEach((s) => {
-      if (s.patientEmail) counts.set(s.patientEmail, (counts.get(s.patientEmail) ?? 0) + 1);
+      if (!s.patientEmail) return;
+      const existing = counts.get(s.patientEmail);
+      const name = s.patientName ?? getUserNameByEmail(s.patientEmail) ?? s.patientEmail;
+      counts.set(s.patientEmail, { count: (existing?.count ?? 0) + 1, name });
     });
     return Array.from(counts.entries())
-      .map(([email, sharedByMe]) => ({
-        email,
-        name: getUserNameByEmail(email) ?? email,
-        sharedByMe,
-      }))
+      .map(([email, { count, name }]) => ({ email, name, sharedByMe: count }))
       .sort((a, b) => a.name.localeCompare(b.name));
   });
 
